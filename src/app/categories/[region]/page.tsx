@@ -13,7 +13,7 @@ const regions = {
 
 type Props = { params: { region: string } };
 
-export default async function Page({ params }: Props) {
+async function RegionPage({ params }: Props) {
   const { region } = params;
 
   if (!regions[region as keyof typeof regions]) {
@@ -69,3 +69,5 @@ export default async function Page({ params }: Props) {
     </div>
   );
 }
+
+export default RegionPage;
