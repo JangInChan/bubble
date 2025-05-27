@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     console.log("회원가입 요청 데이터:", body);
 
     // 백엔드 API 호출
-    const response = await fetch(`/api/auth/register`, {
+    const response = await fetch(`/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

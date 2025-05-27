@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log("로그인 요청 데이터:", body);
 
-    const response = await fetch(`/api/auth/login`, {
+    const response = await fetch(`/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

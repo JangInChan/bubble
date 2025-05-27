@@ -68,7 +68,7 @@ export default function LoginForm() {
           // const userResponse = await axios.get(
           //   "http://43.200.226.212:8080/api/users",
           //   {
-          const userResponse = await apiClient.get("/api/users", {
+          const userResponse = await apiClient.get("/users", {
             headers: {
               access: response.accessToken,
             },
