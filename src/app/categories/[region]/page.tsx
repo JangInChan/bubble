@@ -11,10 +11,12 @@ const regions = {
   jeju: { name: "제주도", description: "제주도 지역의 전통주" },
 };
 
-export default function RegionPage({ params }: { params: { region: string } }) {
-  const region = regions[params.region as keyof typeof regions];
+type Props = { params: { region: string } };
 
-  if (!region) {
+export default async function Page({ params }: Props) {
+  const { region } = params;
+
+  if (!regions[region as keyof typeof regions]) {
     return <div>존재하지 않는 지역입니다.</div>;
   }
 
@@ -22,8 +24,12 @@ export default function RegionPage({ params }: { params: { region: string } }) {
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">{region.name} 전통주</h1>
-          <p className="text-muted-foreground mt-2">{region.description}</p>
+          <h1 className="text-3xl font-bold">
+            {regions[region as keyof typeof regions].name} 전통주
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            {regions[region as keyof typeof regions].description}
+          </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -33,14 +39,18 @@ export default function RegionPage({ params }: { params: { region: string } }) {
             >
               <div className="h-48 bg-gray-200">
                 <img
-                  src={`/placeholder.svg?height=192&width=384&text=${region.name} 전통주 ${item}`}
-                  alt={`${region.name} 전통주 ${item}`}
+                  src={`/placeholder.svg?height=192&width=384&text=${
+                    regions[region as keyof typeof regions].name
+                  } 전통주 ${item}`}
+                  alt={`${
+                    regions[region as keyof typeof regions].name
+                  } 전통주 ${item}`}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4">
                 <h3 className="font-medium text-lg">
-                  {region.name} 전통주 {item}
+                  {regions[region as keyof typeof regions].name} 전통주 {item}
                 </h3>
                 <p className="text-muted-foreground text-sm mt-1">
                   종류 | 도수
