@@ -8,7 +8,7 @@ import { Address } from "@/types/address";
  * const addresses = await getAddressList();
  */
 export async function getAddressList() {
-  const response = await apiClient.get("/address");
+  const response = await apiClient.get("/api/address");
   return response.data;
 }
 
@@ -41,7 +41,7 @@ export type AddressPayload = {
  * });
  */
 export async function saveAddress(address: AddressPayload) {
-  const response = await apiClient.post("/address", address);
+  const response = await apiClient.post("/api/address", address);
   return response.data;
 }
 
@@ -53,7 +53,7 @@ export async function saveAddress(address: AddressPayload) {
  * await deleteAddress(123);
  */
 export async function deleteAddress(addressId: number) {
-  const response = await apiClient.delete(`/address/${addressId}`);
+  const response = await apiClient.delete(`/api/address/${addressId}`);
   return response.data;
 }
 
@@ -78,6 +78,6 @@ export async function updateAddress(
   addressId: number,
   address: AddressPayload
 ) {
-  const response = await apiClient.patch(`/address/${addressId}`, address);
+  const response = await apiClient.patch(`/api/address/${addressId}`, address);
   return response.data;
 }

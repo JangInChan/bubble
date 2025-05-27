@@ -79,7 +79,7 @@ export const authUtils = {
  */
 export async function register(userData: RegisterData): Promise<AuthResponse> {
   const response = await apiClient.post<AuthResponse>(
-    "/auth/register",
+    "/api/auth/register",
     userData
   );
   const { user, accessToken, refreshToken } = response.data;
@@ -98,7 +98,7 @@ export async function register(userData: RegisterData): Promise<AuthResponse> {
  */
 export async function login(credentials: LoginData): Promise<AuthResponse> {
   const response = await apiClient.post<AuthResponse>(
-    "/auth/login",
+    "/api/auth/login",
     credentials
   );
   // 실제 토큰은 response.data.data.access, response.data.data.refresh에 있음
@@ -134,7 +134,7 @@ export function isAuthenticated(): boolean {
  * await deleteUser();
  */
 export async function deleteUser(): Promise<AuthResponse> {
-  const response = await apiClient.delete<AuthResponse>("/users");
+  const response = await apiClient.delete<AuthResponse>("/api/users");
   return response.data;
 }
 
@@ -152,6 +152,6 @@ export async function updateUserInfo(data: {
   phoneNumber: string;
   birthday: string;
 }) {
-  const response = await apiClient.patch("/users", data);
+  const response = await apiClient.patch("/api/users", data);
   return response.data;
 }

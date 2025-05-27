@@ -14,7 +14,7 @@ export async function paymentSuccess(
   orderId: string,
   amount: number
 ) {
-  const response = await apiClient.get("/payment/success", {
+  const response = await apiClient.get("/api/payment/success", {
     params: { paymentKey, orderId, amount },
   });
   return response.data;
@@ -34,7 +34,7 @@ export async function paymentFail(
   message: string,
   orderId: string
 ) {
-  const response = await apiClient.get("/payment/fail", {
+  const response = await apiClient.get("/api/payment/fail", {
     params: { code, message, orderId },
   });
   return response.data;
@@ -54,7 +54,7 @@ export async function cancelPayment(
   canceledItems: Array<{ orderDetailId: number; cancelAmount: number }>,
   cancelReason: string
 ) {
-  const response = await apiClient.post(`/payment/${orderId}/cancel`, {
+  const response = await apiClient.post(`/api/payment/${orderId}/cancel`, {
     orderId,
     canceledItems,
     cancelReason,

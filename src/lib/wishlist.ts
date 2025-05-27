@@ -8,7 +8,7 @@ import apiClient from "./api-client";
  * await addWishList(101);
  */
 export async function addWishList(drinkId: number) {
-  const response = await apiClient.post(`/products/${drinkId}/wishlist`);
+  const response = await apiClient.post(`/api/products/${drinkId}/wishlist`);
   return response.data;
 }
 
@@ -20,7 +20,7 @@ export async function addWishList(drinkId: number) {
  * await deleteWishList(101);
  */
 export async function deleteWishList(drinkId: number) {
-  const response = await apiClient.delete(`/products/${drinkId}/wishlist`);
+  const response = await apiClient.delete(`/api/products/${drinkId}/wishlist`);
   return response.data;
 }
 
@@ -31,6 +31,6 @@ export async function deleteWishList(drinkId: number) {
  * await getWishList();
  */
 export async function getWishList() {
-  const response = await apiClient.get(`/users/me/wishlist`);
+  const response = await apiClient.get(`/api/users/me/wishlist`);
   return response.data;
 }

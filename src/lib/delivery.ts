@@ -13,7 +13,7 @@ export async function updateDeliveryCompany(
   name: string
 ) {
   const response = await apiClient.put(
-    `/admin/delivery-company/${deliveryCompanyId}`,
+    `/api/admin/delivery-company/${deliveryCompanyId}`,
     { name }
   );
   return response.data;
@@ -28,7 +28,7 @@ export async function updateDeliveryCompany(
  */
 export async function deleteDeliveryCompany(deliveryCompanyId: number) {
   const response = await apiClient.delete(
-    `/admin/delivery-company/${deliveryCompanyId}`
+    `/api/admin/delivery-company/${deliveryCompanyId}`
   );
   return response.data;
 }
@@ -40,6 +40,6 @@ export async function deleteDeliveryCompany(deliveryCompanyId: number) {
  * const companies = await getDeliveryCompanies();
  */
 export async function getDeliveryCompanies() {
-  const response = await apiClient.get("/delivery-companies");
+  const response = await apiClient.get("/api/delivery-companies");
   return response.data;
 }

@@ -19,7 +19,7 @@ export interface OrderResponse {
 export async function createOrder(
   cartItemIds: number[]
 ): Promise<OrderResponse> {
-  const response = await apiClient.post<OrderResponse>("/order", {
+  const response = await apiClient.post<OrderResponse>("/api/order", {
     cartItemIds,
   });
   return response.data;
@@ -32,7 +32,7 @@ export async function createOrder(
  * const history = await getOrderHistory();
  */
 export async function getOrderHistory() {
-  const response = await apiClient.get("/order/history");
+  const response = await apiClient.get("/api/order/history");
   return response.data;
 }
 
@@ -45,7 +45,7 @@ export async function getOrderHistory() {
  * await requestRefund(123, [456, 789]);
  */
 export async function requestRefund(orderId: number, orderDetailId: number[]) {
-  const response = await apiClient.post("/order/refund/request", {
+  const response = await apiClient.post("/api/order/refund/request", {
     orderId,
     orderDetailId,
   });
