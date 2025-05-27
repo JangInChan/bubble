@@ -16,7 +16,7 @@ export async function createDrink(drink: any, thumbnail: File, files: File[]) {
     new Blob([JSON.stringify(drink)], { type: "application/json" })
   );
 
-  const response = await apiClient.post("/api/admin/drink", formData, {
+  const response = await apiClient.post("/admin/drink", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
@@ -28,7 +28,7 @@ export async function createDrink(drink: any, thumbnail: File, files: File[]) {
  * @returns {Promise<any>} 삭제 결과
  */
 export async function deleteDrink(drinkId: number) {
-  const response = await apiClient.delete(`/api/admin/drink/${drinkId}`);
+  const response = await apiClient.delete(`/admin/drink/${drinkId}`);
   return response.data;
 }
 
@@ -39,7 +39,7 @@ export async function deleteDrink(drinkId: number) {
  * @returns {Promise<any>} 수정 결과
  */
 export async function updateDrink(drinkId: number, data: any) {
-  const response = await apiClient.patch(`/api/admin/drink/${drinkId}`, data);
+  const response = await apiClient.patch(`/admin/drink/${drinkId}`, data);
   return response.data;
 }
 
@@ -49,7 +49,7 @@ export async function updateDrink(drinkId: number, data: any) {
  * @returns {Promise<any>} 재판매 결과
  */
 export async function restoreDrink(drinkId: number) {
-  const response = await apiClient.patch(`/api/admin/drink/${drinkId}/restore`);
+  const response = await apiClient.patch(`/admin/drink/${drinkId}/restore`);
   return response.data;
 }
 
@@ -59,7 +59,7 @@ export async function restoreDrink(drinkId: number) {
  * @returns {Promise<any>} 상품 상세 정보
  */
 export async function getDrink(drinkId: number) {
-  const response = await apiClient.get(`/api/drink/${drinkId}`);
+  const response = await apiClient.get(`/drink/${drinkId}`);
   return response.data;
 }
 
@@ -92,7 +92,7 @@ export async function searchDrinks(params: {
     ...(params.pageNum && { pageNum: params.pageNum }),
   };
 
-  console.log("API 요청 URL:", "/api/drinks");
+  console.log("API 요청 URL:", "/drinks");
   console.log("API 요청 파라미터:", requestParams);
   console.log("API 요청 타입:", typeof requestParams.type);
   console.log(
@@ -101,7 +101,7 @@ export async function searchDrinks(params: {
     requestParams.keyword
   );
 
-  const response = await apiClient.get("/api/drinks", {
+  const response = await apiClient.get("/drinks", {
     params: requestParams,
   });
 

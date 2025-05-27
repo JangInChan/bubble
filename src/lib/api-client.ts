@@ -1,16 +1,9 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 
-// Base API URL 설정 (환경변수 또는 기본값)
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
-/**
- * Axios 인스턴스 생성
- * - baseURL: API 서버 주소
- * - Content-Type: application/json
- */
+// baseURL을 /api로 고정
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },

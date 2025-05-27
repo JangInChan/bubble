@@ -10,7 +10,7 @@ import apiClient from "./api-client";
  */
 export async function getUsers(page: number, size: number) {
   const response = await apiClient.get(
-    `/api/admin/users?page=${page}&size=${size}`
+    `/admin/users?page=${page}&size=${size}`
   );
   return response.data;
 }

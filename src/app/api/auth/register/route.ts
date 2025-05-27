@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     console.log("회원가입 요청 데이터:", body);
 
     // 백엔드 API 호출
-    const response = await fetch(`${API_URL}/api/auth/register`, {
+    const response = await fetch(`/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,9 +65,9 @@ export async function POST(request: NextRequest) {
 
     return nextResponse;
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("회원가입 처리 중 오류 발생:", error);
     return NextResponse.json(
-      { message: "회원가입에 실패했습니다." },
+      { message: "회원가입 처리 중 오류가 발생했습니다." },
       { status: 500 }
     );
   }

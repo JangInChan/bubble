@@ -31,6 +31,6 @@ export async function deleteWishList(drinkId: number) {
  * await getWishList();
  */
 export async function getWishList() {
-  const response = await apiClient.get(`/api/users/me/like`);
+  const response = await apiClient.get(`/users/me/wishlist`);
   return response.data;
 }

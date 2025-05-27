@@ -11,7 +11,7 @@ import { type User, authUtils } from "@/lib/auth";
 import apiClient from "@/lib/api-client";
 import { useAuthStore } from "@/store/auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+// API_URL 제거
 
 // 인증 컨텍스트 타입 정의
 interface AuthContextType {

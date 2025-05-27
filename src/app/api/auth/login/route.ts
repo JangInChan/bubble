@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     console.log("로그인 요청 데이터:", body);
 
-    const response = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
