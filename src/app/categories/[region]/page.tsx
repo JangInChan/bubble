@@ -11,9 +11,7 @@ const regions = {
   jeju: { name: "제주도", description: "제주도 지역의 전통주" },
 };
 
-type Props = { params: { region: string } };
-
-async function RegionPage({ params }: Props) {
+export default async function RegionPage({ params }: { params: any }) {
   const { region } = params;
 
   if (!regions[region as keyof typeof regions]) {
@@ -42,7 +40,7 @@ async function RegionPage({ params }: Props) {
                   src={`/placeholder.svg?height=192&width=384&text=${
                     regions[region as keyof typeof regions].name
                   } 전통주 ${item}`}
-                  alt={`${
+                  alt={`$${
                     regions[region as keyof typeof regions].name
                   } 전통주 ${item}`}
                   className="w-full h-full object-cover"
@@ -69,5 +67,3 @@ async function RegionPage({ params }: Props) {
     </div>
   );
 }
-
-export default RegionPage;
