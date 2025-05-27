@@ -43,7 +43,7 @@ apiClient.interceptors.response.use(
 
       try {
         // 리프레시 토큰으로 새로운 액세스 토큰 발급 (쿠키 기반, body/params 없이 요청)
-        const response = await axios.post(`${API_URL}/api/auth/refresh`, null, {
+        const response = await axios.post("/auth/refresh", null, {
           withCredentials: true,
         });
 

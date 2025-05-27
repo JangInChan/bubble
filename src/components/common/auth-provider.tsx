@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function fetchUserInfo(): Promise<User | null> {
     if (!accessToken) return null;
     try {
-      const response = await apiClient.get<User>("/api/users", {
+      const response = await apiClient.get<User>("/users", {
         headers: { access: accessToken },
       });
       if (!response.data) return null;
