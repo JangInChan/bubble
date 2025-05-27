@@ -1,9 +1,14 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 
-// baseURL을 /api로 고정
+// baseURL을 환경에 따라 동적으로 설정
+const baseURL =
+  typeof window === "undefined"
+    ? "http://43.200.226.212:8080" // 서버 사이드
+    : "/api"; // 클라이언트 사이드
+
 const apiClient = axios.create({
-  baseURL: "/api",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
