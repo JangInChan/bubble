@@ -150,16 +150,16 @@ export default function CartPage() {
     }
   }, []);
 
-  // 토스페이먼츠 v1 SDK 동적 로드
+  // 토스페이먼츠 v2 SDK 동적 로드
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://js.tosspayments.com/v1/payment";
+    script.src = "https://js.tosspayments.com/v2/payment";
     script.async = true;
     document.body.appendChild(script);
-    console.log("[TOSS v1] SDK script 추가됨");
+    console.log("[TOSS v2] SDK script 추가됨");
     return () => {
       document.body.removeChild(script);
-      console.log("[TOSS v1] SDK script 제거됨");
+      console.log("[TOSS v2] SDK script 제거됨");
     };
   }, []);
 
@@ -607,9 +607,9 @@ export default function CartPage() {
     setShowModal(false);
   };
 
-  // 결제 요청 핸들러 (v1 결제창 방식)
+  // 결제 요청 핸들러 (v2 결제창 방식)
   const handlePayment = async () => {
-    console.log("[TOSS v1] handlePayment 클릭");
+    console.log("[TOSS v2] handlePayment 클릭");
     if (!address) {
       alert("배송지를 선택해주세요.");
       return;
@@ -624,7 +624,8 @@ export default function CartPage() {
         cartItems.map((item) => item.cartId)
       );
       const { orderId, amount, orderName } = orderResult;
-      console.log("[TOSS v1] 주문 생성 완료", orderResult);
+      console.log("[TOSS v2] 주문 생성 완료", orderResult);
+
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
       if (!(window as any).TossPayments) {
         alert(
@@ -632,17 +633,21 @@ export default function CartPage() {
         );
         return;
       }
+
       const tossPayments = (window as any).TossPayments(clientKey);
       await tossPayments.requestPayment("카드", {
         amount,
         orderId,
         orderName,
+        customerName: address.recipientName,
+        customerEmail: "customer@example.com", // TODO: 실제 고객 이메일로 변경
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,
+        easyPay: "토스페이",
       });
-      console.log("[TOSS v1] 결제 요청 완료");
+      console.log("[TOSS v2] 결제 요청 완료");
     } catch (error) {
-      console.error("[TOSS v1] 결제 처리 중 오류 발생:", error);
+      console.error("[TOSS v2] 결제 처리 중 오류 발생:", error);
       alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
