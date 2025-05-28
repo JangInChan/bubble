@@ -103,7 +103,7 @@ export default function Header() {
             {isLoggedIn ? (
               <div className="relative" ref={dropdownRef}>
                 <button
-                  className="p-2 hover:bg-darkgray rounded-full flex items-center"
+                  className="p-2 hover:text-white rounded-full flex items-center text-sub-light"
                   onClick={toggleDropdown}
                 >
                   <User className="h-5 w-5" />
