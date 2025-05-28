@@ -10,7 +10,7 @@ export interface OrderResponse {
 }
 
 /**
- * 주문 생성 (order, orderDetail 생성 및 결제 연동 정보 반환)
+ * 주문 생성 (order, orderDetail 생성 및 결제 연동 정보 반환) -> 수정필요
  * @param cartItemIds 주문할 장바구니 아이템 ID 배열
  * @returns {Promise<OrderResponse>} 주문 및 결제 정보 (orderId, amount, orderName 등)
  * @example
@@ -24,6 +24,7 @@ export async function createOrder(
   });
   return response.data;
 }
+// 수정필요
 
 /**
  * 주문 이력 조회 (사용자의 전체 주문 내역)
