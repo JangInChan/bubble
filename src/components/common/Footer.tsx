@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="w-full relative h-[180px] text-left text-lg text-white font-inter overflow-hidden bg-darkslategray">
+    <footer className="w-full relative h-[180px] text-left text-lg text-white font-inter overflow-hidden bg-main">
       {/* 중간 라인 */}
       <div
         className="absolute left-[20.24%] right-[8.89%] top-[44.55%] h-[0.75px] bg-gray"

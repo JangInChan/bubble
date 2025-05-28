@@ -1,27 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-/* Tailwind 4.1.6 기준 토큰 정의 */
+/* 사용자 정의 테마 토큰 */
 @theme {
-  --color-primary-100: #50c7b3;
-  --color-primary-200: #3bb7a1;
-  --color-white: #fff;
-  --color-gray: #7d7d7d;
-  --color-darkslategray: #0e2e40;
-  --color-darkgray: #325b5f;
-  --color-lightyellow: #ffffdc;
-  --color-palegoldenrod: #ecf0b7;
-  --color-silver: #bababc;
-  --color-lightgray: #cbcccc;
+  /* 컬러: 메인 */
+  --color-main: #0e2e40;
+  --color-point: #ecf0b7;
+  --color-white: #ffffff;
+
+  /* 컬러: 서브 */
+  --color-sub-dark: #7d7d7d;
+  --color-sub-light: #dcdcdc;
+
+  /* 폰트 */
   --font-inter: "Inter", sans-serif;
+  --font-pretendard: "Pretendard", sans-serif;
+  --font-noh: "Noh 옵티크", "Optique Display", serif;
+  --font-jj: "JJBlackRose", serif;
 }
 
-/* 커스텀 리셋 및 기본 레이아웃 설정 */
+/* 리셋 및 기본 레이아웃 */
 @layer base {
   *,
   ::before,
   ::after {
     @apply border-0;
+    box-sizing: border-box;
   }
 
   html,
@@ -40,5 +44,95 @@
 
   main {
     @apply flex-1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* 커스텀 유틸리티: 색상 */
+@layer utilities {
+  .text-main {
+    color: var(--color-main);
+  }
+  .bg-main {
+    background-color: var(--color-main);
+  }
+
+  .text-point {
+    color: var(--color-point);
+  }
+  .bg-point {
+    background-color: var(--color-point);
+  }
+
+  .text-sub-dark {
+    color: var(--color-sub-dark);
+  }
+  .bg-sub-dark {
+    background-color: var(--color-sub-dark);
+  }
+
+  .text-sub-light {
+    color: var(--color-sub-light);
+  }
+  .bg-sub-light {
+    background-color: var(--color-sub-light);
+  }
+
+  .text-white {
+    color: var(--color-white);
+  }
+  .bg-white {
+    background-color: var(--color-white);
+  }
+}
+
+/* 커스텀 유틸리티: 폰트 */
+@layer utilities {
+  .font-jj {
+    font-family: var(--font-jj) !important;
+  }
+
+  .font-noh {
+    font-family: var(--font-noh) !important;
+  }
+
+  .font-pretendard {
+    font-family: var(--font-pretendard) !important;
+  }
+
+  .font-36pt {
+    font-size: 2.25rem;
+  }
+  .font-32pt {
+    font-size: 2rem;
+  }
+  .font-21pt {
+    font-size: 1.3125rem;
+  }
+  .font-18pt {
+    font-size: 1.125rem;
+  }
+  .font-16pt {
+    font-size: 1rem;
+  }
+
+  .weight-extrabold {
+    font-weight: 800 !important;
+  }
+
+  .weight-bold {
+    font-weight: 700 !important;
+  }
+
+  .weight-medium {
+    font-weight: 500 !important;
+  }
+
+  .weight-light {
+    font-weight: 300 !important;
   }
 }

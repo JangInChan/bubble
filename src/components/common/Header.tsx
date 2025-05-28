@@ -14,7 +14,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { useAuth } from "@/components/common/auth-provider";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +23,12 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
@@ -46,7 +52,7 @@ export default function Header() {
   };
 
   return (
-    <header className="relative w-full h-[64px] text-[18px] text-lightgray font-inter z-10 bg-darkslategray">
+    <header className="relative w-full h-[64px] text-[18px] text-lightgray font-inter z-10 bg-main">
       <div className="container mx-auto px-4 h-full flex items-center justify-between relative">
         {/* 왼쪽: 로고/메뉴 */}
         <div className="flex items-center space-x-8 h-full relative">
@@ -55,21 +61,33 @@ export default function Header() {
           </Link>
           <Link
             href="/categories"
-            className="text-white hover:bg-darkgray rounded-full px-2 py-1"
+            className={`font-pretendard text-[21px] rounded-full px-2 py-1 hover:text-white ${
+              isMounted && pathname === "/categories"
+                ? "font-semibold text-white"
+                : "font-light text-sub-light"
+            }`}
             style={{ position: "relative", top: "2px", left: "0.5vw" }}
           >
             전체상품
           </Link>
           <Link
             href="/qna"
-            className="text-white hover:bg-darkgray rounded-full px-2 py-1"
+            className={`font-pretendard text-[21px] rounded-full px-2 py-1 hover:text-white ${
+              isMounted && pathname === "/qna"
+                ? "font-semibold text-white"
+                : "font-light text-sub-light"
+            }`}
             style={{ position: "relative", top: "2px", left: "0vw" }}
           >
             Q&A
           </Link>
           <Link
             href="/about"
-            className="text-white hover:bg-darkgray rounded-full px-2 py-1"
+            className={`font-pretendard text-[21px] rounded-full px-2 py-1 hover:text-white ${
+              isMounted && pathname === "/about"
+                ? "font-semibold text-white"
+                : "font-light text-sub-light"
+            }`}
             style={{ position: "relative", top: "2px", left: "0vw" }}
           >
             소개란
@@ -126,14 +144,22 @@ export default function Header() {
               <div className="flex items-center space-x-1">
                 <Link
                   href="/login"
-                  className="flex items-center p-2 hover:bg-gray-100 rounded-md text-sm"
+                  className={`font-pretendard text-[16px] rounded-full px-2 py-1 hover:bg-darkgray hover:text-white ${
+                    isMounted && pathname === "/login"
+                      ? "font-semibold text-white"
+                      : "font-light text-sub-light"
+                  } flex items-center`}
                 >
                   <LogIn className="h-5 w-5 mr-1" />
                   <span className="hidden md:inline">로그인</span>
                 </Link>
                 <Link
                   href="/signup"
-                  className="flex items-center p-2 hover:bg-gray-100 rounded-md text-sm"
+                  className={`font-pretendard text-[16px] rounded-full px-2 py-1 hover:bg-darkgray hover:text-white ${
+                    isMounted && pathname === "/signup"
+                      ? "font-semibold text-white"
+                      : "font-light text-sub-light"
+                  } flex items-center`}
                 >
                   <UserPlus className="h-5 w-5 mr-1" />
                   <span className="hidden md:inline">회원가입</span>
@@ -161,23 +187,18 @@ export default function Header() {
               fill
               className="absolute left-0 top-0 w-full h-full z-0"
             />
-            {/* 왼쪽 placeholder SVG (input 맨 왼쪽에 겹치게) */}
-            {searchValue === "" && (
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
-                <Image
-                  src="/search-deco.svg"
-                  alt="검색 데코"
-                  width={170}
-                  height={28}
-                />
+            {/* 왼쪽 placeholder 텍스트 (가이드 적용, globals.css 유틸리티만 사용) */}
+            {/* {searchValue === "" && (
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none font-noh font-regular text-[18px] text-white select-none">
+                검색어를 입력해 주세요
               </span>
-            )}
+            )} */}
             <input
               type="text"
-              className="pl-4 pr-10 py-2 bg-transparent border-none text-white w-full h-full relative z-10 focus:outline-none"
+              className="pl-4 pr-10 py-2 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh font-regular text-[18px] text-white placeholder:text-sub-light placeholder:translate-y-[2px]"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              style={{ background: "transparent" }}
+              placeholder="검색어를 입력해 주세요"
             />
             {/* 돋보기 아이콘 */}
             <button

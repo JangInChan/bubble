@@ -5,6 +5,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/common/auth-provider";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,30 @@ export default function RootLayout({
   // 없으면 스토어에서 access 토큰 검사 -> 없으면 로그인 페이지로 이동
   return (
     <html lang="ko">
+      <head>{/* meta, link 등만 이곳에 */}</head>
       <body className={inter.className}>
+        {/* Adobe Fonts 스크립트는 Script로 body에 삽입 */}
+        <Script id="adobe-fonts" strategy="beforeInteractive">
+          {`(function(d) {
+            var config = {
+              kitId: 'hx16zow',
+              scriptTimeout: 3000,
+              async: true
+            },
+            h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),
+            tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
+            h.className+=" wf-loading";
+            tk.src='https://use.typekit.net/'+config.kitId+'.js';
+            tk.async=true;
+            tk.onload=tk.onreadystatechange=function(){
+              a=this.readyState;
+              if(f||a&&a!="complete"&&a!="loaded")return;
+              f=true;clearTimeout(t);
+              try{Typekit.load(config)}catch(e){}
+            };
+            s.parentNode.insertBefore(tk,s)
+          })(document);`}
+        </Script>
         <AuthProvider>
           <div className="flex min-h-screen flex-col">
             <Header />

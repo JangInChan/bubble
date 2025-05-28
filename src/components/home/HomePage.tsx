@@ -265,20 +265,6 @@ export default function HomePage() {
             약주
           </div>
         </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
         {/* 매실 막걸리 */}
         <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
           <Image
