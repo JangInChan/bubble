@@ -621,9 +621,10 @@ export default function CartPage() {
     try {
       // 1. 주문 생성 (orderId 등 확보)
       const orderResult: OrderResponse = await createOrder(
-        cartItems.map((item) => item.cartId)
+        cartItems.map((item) => item.cartId),
+        address.addressId
       );
-      const { orderId, amount, orderName } = orderResult;
+      const { orderId, amount, orderName, successUrl, failUrl } = orderResult;
       console.log("[TOSS v2] 주문 생성 완료", orderResult);
 
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
@@ -639,8 +640,8 @@ export default function CartPage() {
         amount,
         orderId,
         orderName,
-        successUrl: "https://js.tosspayments.com/v2/standard/success",
-        failUrl: "https://js.tosspayments.com/v2/standard/fail",
+        successUrl,
+        failUrl,
       });
       console.log("[TOSS v2] 결제 요청 완료");
     } catch (error) {

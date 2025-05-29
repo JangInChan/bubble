@@ -46,12 +46,14 @@ export async function updateCartItemQuantity(cartId: number, quantity: number) {
 }
 
 /**
- * 선택된 장바구니 상품들의 결제 정보 조회
- * @param cartIds 선택된 cartId 배열
- * @returns {Promise<any>} 결제 정보
+ * 장바구니 구매 정보 조회
+ * @param cartItemIds 선택된 cartId 배열
+ * @returns {Promise<any>} 구매 정보 (총 금액, 배송비 등)
+ * @example
+ * const info = await getCartBuyInfo([1, 2, 3]);
  */
-export async function getCartBuyInfo(cartIds: number[]) {
-  const response = await apiClient.post(`/api/cart/buy`, { cartIds });
+export async function getCartBuyInfo(cartItemIds: number[]) {
+  const response = await apiClient.post(`/api/cart/buy`, { cartItemIds });
   return response.data;
 }
 

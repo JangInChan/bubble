@@ -7,24 +7,36 @@ export interface OrderResponse {
   orderId: string;
   amount: number;
   orderName: string;
+  customerEmail: string;
+  customerName: string;
+  successUrl: string;
+  failUrl: string;
 }
 
 /**
- * 주문 생성 (order, orderDetail 생성 및 결제 연동 정보 반환) -> 수정필요
+ * 주문 생성 (order, orderDetail 생성 및 결제 연동 정보 반환)
  * @param cartItemIds 주문할 장바구니 아이템 ID 배열
+ * @param addressId 배송지 ID
  * @returns {Promise<OrderResponse>} 주문 및 결제 정보 (orderId, amount, orderName 등)
  * @example
- * const result = await createOrder([1, 2, 3]);
+ * const result = await createOrder([1, 2, 3], 1);
  */
 export async function createOrder(
-  cartItemIds: number[]
+  cartItemIds: number[],
+  addressId: number
 ): Promise<OrderResponse> {
-  const response = await apiClient.post<OrderResponse>("/api/order", {
+  const response = await apiClient.post<{
+    success: boolean;
+    message: string;
+    data: OrderResponse;
+    timestamp: string;
+    status: string;
+  }>("/api/order", {
     cartItemIds,
+    addressId,
   });
-  return response.data;
+  return response.data.data;
 }
-// 수정필요
 
 /**
  * 주문 이력 조회 (사용자의 전체 주문 내역)
