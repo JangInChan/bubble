@@ -153,7 +153,7 @@ export default function CartPage() {
   // 토스페이먼츠 v2 SDK 동적 로드
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://js.tosspayments.com/v2/payment";
+    script.src = "https://js.tosspayments.com/v2/standard";
     script.async = true;
     document.body.appendChild(script);
     console.log("[TOSS v2] SDK script 추가됨");
@@ -641,8 +641,8 @@ export default function CartPage() {
         orderName,
         customerName: address.recipientName,
         customerEmail: "customer@example.com", // TODO: 실제 고객 이메일로 변경
-        successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/payment/fail`,
+        successUrl: "https://js.tosspayments.com/v2/standard/success",
+        failUrl: "https://js.tosspayments.com/v2/standard/fail",
         easyPay: "토스페이",
       });
       console.log("[TOSS v2] 결제 요청 완료");
