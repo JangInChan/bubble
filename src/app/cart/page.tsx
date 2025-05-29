@@ -639,11 +639,8 @@ export default function CartPage() {
         amount,
         orderId,
         orderName,
-        customerName: address.recipientName,
-        customerEmail: "customer@example.com", // TODO: 실제 고객 이메일로 변경
         successUrl: "https://js.tosspayments.com/v2/standard/success",
         failUrl: "https://js.tosspayments.com/v2/standard/fail",
-        easyPay: "토스페이",
       });
       console.log("[TOSS v2] 결제 요청 완료");
     } catch (error) {
