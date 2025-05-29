@@ -56,7 +56,9 @@ export async function updateCartItemQuantity(cartId: number, quantity: number) {
 export async function getCartBuyInfo(cartItemIds: number[]) {
   try {
     console.log("[Cart] 구매 정보 조회 시작", { cartItemIds });
-    const response = await apiClient.post(`/api/cart/buy`, { cartItemIds });
+    const response = await apiClient.post(`/api/cart/buy`, {
+      cartIds: cartItemIds,
+    });
     console.log("[Cart] 구매 정보 조회 완료", response.data);
     return response.data;
   } catch (error: any) {
