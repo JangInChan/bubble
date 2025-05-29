@@ -23,16 +23,26 @@ export interface OrderResponse {
 export async function createOrder(
   cartItemIds: number[]
 ): Promise<OrderResponse> {
-  const response = await apiClient.post<{
-    success: boolean;
-    message: string;
-    data: OrderResponse;
-    timestamp: string;
-    status: string;
-  }>("/api/order", {
-    cartItemIds,
-  });
-  return response.data.data;
+  try {
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+      data: OrderResponse;
+      timestamp: string;
+      status: string;
+    }>("/api/order", {
+      cartItemIds,
+    });
+    return response.data.data;
+  } catch (error: any) {
+    console.error("[Order] 주문 생성 실패:", {
+      error,
+      response: error.response?.data,
+      status: error.response?.status,
+      headers: error.response?.headers,
+    });
+    throw error;
+  }
 }
 
 /**

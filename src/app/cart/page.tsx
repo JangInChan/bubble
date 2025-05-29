@@ -620,6 +620,9 @@ export default function CartPage() {
     }
     try {
       // 1. 주문 생성 (orderId 등 확보)
+      console.log("[TOSS v2] 주문 생성 시작", {
+        cartItemIds: cartItems.map((item) => item.cartId),
+      });
       const orderResult: OrderResponse = await createOrder(
         cartItems.map((item) => item.cartId)
       );
@@ -643,8 +646,13 @@ export default function CartPage() {
         failUrl,
       });
       console.log("[TOSS v2] 결제 요청 완료");
-    } catch (error) {
-      console.error("[TOSS v2] 결제 처리 중 오류 발생:", error);
+    } catch (error: any) {
+      console.error("[TOSS v2] 결제 처리 중 오류 발생:", {
+        error,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers,
+      });
       alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
