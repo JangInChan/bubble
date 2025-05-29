@@ -13,7 +13,7 @@ const baseURL =
         console.log("서버 baseURL:", process.env.NEXT_PUBLIC_API_URL);
         return process.env.NEXT_PUBLIC_API_URL;
       })()
-    : "api"; // 클라이언트 사이드
+    : ""; // 클라이언트 사이드
 
 const apiClient = axios.create({
   baseURL,
