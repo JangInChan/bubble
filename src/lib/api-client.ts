@@ -4,7 +4,15 @@ import { useAuthStore } from "@/store/auth";
 // baseURL을 환경에 따라 동적으로 설정
 const baseURL =
   typeof window === "undefined"
-    ? process.env.NEXT_PUBLIC_API_URL // 서버 사이드
+    ? (() => {
+        if (!process.env.NEXT_PUBLIC_API_URL) {
+          throw new Error(
+            "NEXT_PUBLIC_API_URL 환경변수가 설정되어 있지 않습니다!"
+          );
+        }
+        console.log("서버 baseURL:", process.env.NEXT_PUBLIC_API_URL);
+        return process.env.NEXT_PUBLIC_API_URL;
+      })()
     : ""; // 클라이언트 사이드
 
 const apiClient = axios.create({
