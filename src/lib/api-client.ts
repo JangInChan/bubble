@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/auth";
 const baseURL =
   typeof window === "undefined"
     ? "http://43.200.226.212:8080" // 서버 사이드
-    : "/api"; // 클라이언트 사이드
+    : ""; // 클라이언트 사이드
 
 const apiClient = axios.create({
   baseURL,
