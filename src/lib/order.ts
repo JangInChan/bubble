@@ -32,7 +32,7 @@ export async function createOrder(
       timestamp: string;
       status: string;
     }>("/api/order", {
-      cartItemIds, // API 문서에 맞게 cartItemIds로 변경
+      cartItemIds,
     });
     console.log("[Order] 주문 생성 완료", response.data);
     return response.data.data;
@@ -42,6 +42,12 @@ export async function createOrder(
       response: error.response?.data,
       status: error.response?.status,
       headers: error.response?.headers,
+      request: {
+        url: error.config?.url,
+        method: error.config?.method,
+        data: error.config?.data,
+        headers: error.config?.headers,
+      },
     });
     throw error;
   }
