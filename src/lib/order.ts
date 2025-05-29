@@ -48,6 +48,10 @@ export async function createOrder(
         data: error.config?.data,
         headers: error.config?.headers,
       },
+      errorMessage: error.message,
+      errorCode: error.code,
+      errorName: error.name,
+      stack: error.stack,
     });
     throw error;
   }
