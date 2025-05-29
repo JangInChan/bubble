@@ -609,43 +609,43 @@ export default function CartPage() {
 
   // 결제 요청 핸들러 (v2 결제창 방식)
   const handlePayment = async () => {
-    console.log("[TOSS v2] handlePayment 클릭");
+    if (!cartItems.length) {
+      alert("장바구니가 비어있습니다.");
+      return;
+    }
+
     if (!address) {
       alert("배송지를 선택해주세요.");
       return;
     }
-    if (cartItems.length === 0) {
-      alert("장바구니가 비어있습니다.");
-      return;
-    }
+
     try {
-      // 1. 주문 생성 (orderId 등 확보)
-      console.log("[TOSS v2] 주문 생성 시작", {
-        cartItemIds: cartItems.map((item) => item.cartId),
-      });
-      const orderResult: OrderResponse = await createOrder(
+      // 1. 장바구니 구매 정보 조회
+      const buyInfo = await getCartBuyInfo(
         cartItems.map((item) => item.cartId)
       );
-      const { orderId, amount, orderName, successUrl, failUrl } = orderResult;
-      console.log("[TOSS v2] 주문 생성 완료", orderResult);
+      console.log("[TOSS v2] 구매 정보 조회 완료:", buyInfo);
 
+      // 2. 주문 생성
+      const orderResult = await createOrder(
+        cartItems.map((item) => item.cartId)
+      );
+      console.log("[TOSS v2] 주문 생성 완료:", orderResult);
+
+      // 3. 결제 처리
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-      if (!(window as any).TossPayments) {
-        alert(
-          "토스페이먼츠 SDK가 로드되지 않았습니다. 새로고침 후 다시 시도해주세요."
-        );
-        return;
+      if (!clientKey) {
+        throw new Error("Toss Payments client key is not configured");
       }
-
       const tossPayments = (window as any).TossPayments(clientKey);
+
       await tossPayments.requestPayment("카드", {
-        amount,
-        orderId,
-        orderName,
-        successUrl,
-        failUrl,
+        amount: orderResult.amount,
+        orderId: orderResult.orderId,
+        orderName: orderResult.orderName,
+        successUrl: "https://js.tosspayments.com/v2/standard/success",
+        failUrl: "https://js.tosspayments.com/v2/standard/fail",
       });
-      console.log("[TOSS v2] 결제 요청 완료");
     } catch (error: any) {
       console.error("[TOSS v2] 결제 처리 중 오류 발생:", {
         error,
@@ -653,7 +653,7 @@ export default function CartPage() {
         status: error.response?.status,
         headers: error.response?.headers,
       });
-      alert("결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert("결제 처리 중 오류가 발생했습니다.");
     }
   };
 
