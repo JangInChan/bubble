@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/auth";
 // baseURL을 환경에 따라 동적으로 설정
 const baseURL =
   typeof window === "undefined"
-    ? process.env.NEXT_PUBLIC_API_BASE_URL // 서버 사이드
+    ? process.env.NEXT_PUBLIC_API_URL // 서버 사이드
     : ""; // 클라이언트 사이드
 
 const apiClient = axios.create({
