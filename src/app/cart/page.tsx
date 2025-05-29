@@ -621,8 +621,7 @@ export default function CartPage() {
     try {
       // 1. 주문 생성 (orderId 등 확보)
       const orderResult: OrderResponse = await createOrder(
-        cartItems.map((item) => item.cartId),
-        address.addressId
+        cartItems.map((item) => item.cartId)
       );
       const { orderId, amount, orderName, successUrl, failUrl } = orderResult;
       console.log("[TOSS v2] 주문 생성 완료", orderResult);

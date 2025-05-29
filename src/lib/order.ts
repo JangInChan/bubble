@@ -16,14 +16,12 @@ export interface OrderResponse {
 /**
  * 주문 생성 (order, orderDetail 생성 및 결제 연동 정보 반환)
  * @param cartItemIds 주문할 장바구니 아이템 ID 배열
- * @param addressId 배송지 ID
  * @returns {Promise<OrderResponse>} 주문 및 결제 정보 (orderId, amount, orderName 등)
  * @example
- * const result = await createOrder([1, 2, 3], 1);
+ * const result = await createOrder([1, 2, 3]);
  */
 export async function createOrder(
-  cartItemIds: number[],
-  addressId: number
+  cartItemIds: number[]
 ): Promise<OrderResponse> {
   const response = await apiClient.post<{
     success: boolean;
@@ -33,7 +31,6 @@ export async function createOrder(
     status: string;
   }>("/api/order", {
     cartItemIds,
-    addressId,
   });
   return response.data.data;
 }
