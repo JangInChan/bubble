@@ -700,7 +700,7 @@ export default function CartPage() {
                 >
                   <div className="flex-shrink-0 mr-4">
                     <Image
-                      src={"/placeholder.svg"}
+                      src={item.imageUrl || "/images/placeholder.png"}
                       alt={item.drinkName}
                       width={80}
                       height={80}

@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  imageUrl?: string;
 }
 
 /**
@@ -53,8 +54,20 @@ export async function updateCartItemQuantity(cartId: number, quantity: number) {
  * const info = await getCartBuyInfo([1, 2, 3]);
  */
 export async function getCartBuyInfo(cartItemIds: number[]) {
-  const response = await apiClient.post(`/api/cart/buy`, { cartItemIds });
-  return response.data;
+  try {
+    console.log("[Cart] 구매 정보 조회 시작", { cartItemIds });
+    const response = await apiClient.post(`/api/cart/buy`, { cartItemIds });
+    console.log("[Cart] 구매 정보 조회 완료", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("[Cart] 구매 정보 조회 실패:", {
+      error,
+      response: error.response?.data,
+      status: error.response?.status,
+      headers: error.response?.headers,
+    });
+    throw error;
+  }
 }
 
 /**
