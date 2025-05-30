@@ -19,11 +19,23 @@ export default function PaymentSuccessPage() {
         const orderId = searchParams.get("orderId");
         const amount = searchParams.get("amount");
 
+        console.log("[TOSS] 결제 성공 쿼리스트링", {
+          paymentKey,
+          orderId,
+          amount,
+        });
+
         if (!paymentKey || !orderId || !amount) {
           throw new Error("필수 결제 정보가 누락되었습니다.");
         }
 
+        console.log("[TOSS] paymentSuccess 호출 시작", {
+          paymentKey,
+          orderId,
+          amount,
+        });
         await paymentSuccess(paymentKey, orderId, Number(amount));
+        console.log("[TOSS] paymentSuccess 호출 완료");
         setIsLoading(false);
       } catch (error) {
         console.error("결제 처리 중 오류 발생:", error);
