@@ -151,19 +151,6 @@ export default function CartPage() {
     }
   }, []);
 
-  // 토스페이먼츠 v2 SDK 동적 로드
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://js.tosspayments.com/v2/standard";
-    script.async = true;
-    document.body.appendChild(script);
-    console.log("[TOSS v2] SDK script 추가됨");
-    return () => {
-      document.body.removeChild(script);
-      console.log("[TOSS v2] SDK script 제거됨");
-    };
-  }, []);
-
   const increaseQuantity = async (id: number, currentQuantity: number) => {
     const newQuantity = currentQuantity + 1;
     try {
@@ -641,9 +628,7 @@ export default function CartPage() {
         throw new Error("Toss Payments client key is not configured");
       }
 
-      // loadTossPayments를 사용하여 결제 모듈 초기화
       const tossPayments = await loadTossPayments(clientKey);
-
       await tossPayments.requestPayment("카드", {
         amount: orderResult.amount,
         orderId: orderResult.orderId,
