@@ -633,6 +633,8 @@ export default function CartPage() {
         amount: orderResult.amount,
         orderId: orderResult.orderId,
         orderName: orderResult.orderName,
+        customerName: orderResult.customerName,
+        customerEmail: orderResult.customerEmail,
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,
       });
