@@ -23,6 +23,7 @@ import {
 } from "@/lib/address";
 import { createOrder, OrderResponse } from "@/lib/order";
 import { loadTossPayments } from "@tosspayments/payment-sdk";
+import TossPaymentWidget from "@/components/common/TossPaymentWidget";
 
 // AddressSummary 컴포넌트 CartPage 함수 바깥에 선언
 function AddressSummary({
@@ -92,6 +93,10 @@ export default function CartPage() {
   const paymentWidgetRef = useRef<any>(null);
   const agreementWidgetRef = useRef<any>(null);
   const [widgetLoaded, setWidgetLoaded] = useState(false);
+
+  // 주문 생성 및 결제에 필요한 정보 준비
+  const [orderInfo, setOrderInfo] = useState<any>(null);
+  const [amountForWidget, setAmountForWidget] = useState<number>(0);
 
   useEffect(() => {
     async function fetchCart() {
@@ -595,62 +600,29 @@ export default function CartPage() {
     setShowModal(false);
   };
 
-  // 결제 요청 핸들러 (v2 결제창 방식)
-  const handlePayment = async () => {
-    if (typeof window === "undefined") return; // SSR 방지
-
+  // 주문 생성 및 결제에 필요한 정보 준비
+  const handlePrepareOrder = async () => {
     if (!cartItems.length) {
       alert("장바구니가 비어있습니다.");
       return;
     }
-
     if (!address) {
       alert("배송지를 선택해주세요.");
       return;
     }
-
     try {
-      // 1. 장바구니 구매 정보 조회
-      const buyInfo = await getCartBuyInfo(
-        cartItems.map((item) => item.cartId)
-      );
-      console.log("[TOSS v2] 구매 정보 조회 완료:", buyInfo);
-
-      // 2. 주문 생성
       const orderResult = await createOrder(
         cartItems.map((item) => item.cartId)
       );
-      console.log("[TOSS v2] 주문 생성 완료:", orderResult);
-
-      // 3. 결제 처리
-      const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-      if (!clientKey) {
-        throw new Error("Toss Payments client key is not configured");
-      }
-
-      const tossPayments = await loadTossPayments(clientKey);
-      console.log("orderResult", orderResult); // 실제 값 확인
-
-      const paymentParams = {
-        amount: orderResult.amount,
+      setOrderInfo({
         orderId: orderResult.orderId,
         orderName: orderResult.orderName,
         customerName: orderResult.customerName,
         customerEmail: orderResult.customerEmail,
-        successUrl: "https://giju.vercel.app/payment/success",
-        failUrl: "https://giju.vercel.app/payment/fail",
-      };
-      console.log("최종 Toss 결제 파라미터", paymentParams);
-
-      await tossPayments.requestPayment("카드", paymentParams);
-    } catch (error: any) {
-      console.error("[TOSS v2] 결제 처리 중 오류 발생:", {
-        error,
-        response: error.response?.data,
-        status: error.response?.status,
-        headers: error.response?.headers,
       });
-      alert("결제 처리 중 오류가 발생했습니다.");
+      setAmountForWidget(orderResult.amount);
+    } catch (e) {
+      alert("주문 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -819,19 +791,27 @@ export default function CartPage() {
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <button
-                    className="w-[140px] h-[68px] mt-6 text-white rounded flex items-center justify-center hover:opacity-90 transition"
-                    style={{
-                      backgroundImage: "url('/cart-button.svg')",
-                      backgroundSize: "100% 100%",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      border: "none",
-                    }}
-                    onClick={handlePayment}
-                  >
-                    구매하기
-                  </button>
+                  {/* 기존 결제 버튼 대신 아래 위젯 렌더링 */}
+                  {orderInfo ? (
+                    <TossPaymentWidget
+                      amount={amountForWidget}
+                      orderInfo={orderInfo}
+                    />
+                  ) : (
+                    <button
+                      className="w-[140px] h-[68px] mt-6 text-white rounded flex items-center justify-center hover:opacity-90 transition"
+                      style={{
+                        backgroundImage: "url('/cart-button.svg')",
+                        backgroundSize: "100% 100%",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        border: "none",
+                      }}
+                      onClick={handlePrepareOrder}
+                    >
+                      구매하기
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
