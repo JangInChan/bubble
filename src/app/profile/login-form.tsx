@@ -65,7 +65,7 @@ export default function LoginForm() {
         console.log("토큰값", response.accessToken);
         console.log("로그인 후 토큰 저장, 유저 정보 요청 시작");
         try {
-          const userResponse = await apiClient.get("/api/users", {
+          const userResponse = await apiClient.get("/users", {
             headers: {
               access: response.accessToken,
             },
