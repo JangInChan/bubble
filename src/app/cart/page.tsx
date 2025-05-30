@@ -631,15 +631,18 @@ export default function CartPage() {
       const tossPayments = await loadTossPayments(clientKey);
       console.log("orderResult", orderResult); // 실제 값 확인
 
-      await tossPayments.requestPayment("카드", {
+      const paymentParams = {
         amount: orderResult.amount,
         orderId: orderResult.orderId,
         orderName: orderResult.orderName,
         customerName: orderResult.customerName,
         customerEmail: orderResult.customerEmail,
-        successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/payment/fail`,
-      });
+        successUrl: "https://giju.vercel.app/payment/success",
+        failUrl: "https://giju.vercel.app/payment/fail",
+      };
+      console.log("최종 Toss 결제 파라미터", paymentParams);
+
+      await tossPayments.requestPayment("카드", paymentParams);
     } catch (error: any) {
       console.error("[TOSS v2] 결제 처리 중 오류 발생:", {
         error,
