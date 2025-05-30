@@ -648,8 +648,8 @@ export default function CartPage() {
         amount: orderResult.amount,
         orderId: orderResult.orderId,
         orderName: orderResult.orderName,
-        successUrl: "https://js.tosspayments.com/v2/standard/success",
-        failUrl: "https://js.tosspayments.com/v2/standard/fail",
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
       });
     } catch (error: any) {
       console.error("[TOSS v2] 결제 처리 중 오류 발생:", {
