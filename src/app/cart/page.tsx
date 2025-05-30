@@ -629,6 +629,8 @@ export default function CartPage() {
       }
 
       const tossPayments = await loadTossPayments(clientKey);
+      console.log("orderResult", orderResult); // 실제 값 확인
+
       await tossPayments.requestPayment("카드", {
         amount: orderResult.amount,
         orderId: orderResult.orderId,
