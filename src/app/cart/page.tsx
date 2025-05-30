@@ -22,6 +22,7 @@ import {
   AddressPayload,
 } from "@/lib/address";
 import { createOrder, OrderResponse } from "@/lib/order";
+import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 // AddressSummary 컴포넌트 CartPage 함수 바깥에 선언
 function AddressSummary({
@@ -609,6 +610,8 @@ export default function CartPage() {
 
   // 결제 요청 핸들러 (v2 결제창 방식)
   const handlePayment = async () => {
+    if (typeof window === "undefined") return; // SSR 방지
+
     if (!cartItems.length) {
       alert("장바구니가 비어있습니다.");
       return;
@@ -637,7 +640,9 @@ export default function CartPage() {
       if (!clientKey) {
         throw new Error("Toss Payments client key is not configured");
       }
-      const tossPayments = (window as any).TossPayments(clientKey);
+
+      // loadTossPayments를 사용하여 결제 모듈 초기화
+      const tossPayments = await loadTossPayments(clientKey);
 
       await tossPayments.requestPayment("카드", {
         amount: orderResult.amount,
