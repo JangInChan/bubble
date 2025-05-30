@@ -39,6 +39,10 @@ export default function PaymentSuccessPage() {
         setIsLoading(false);
       } catch (error) {
         console.error("결제 처리 중 오류 발생:", error);
+        const err = error as any;
+        if (err?.response?.data) {
+          console.error("백엔드 응답:", err.response.data);
+        }
         setError("결제 처리 중 오류가 발생했습니다.");
         setIsLoading(false);
       }
