@@ -1,5 +1,6 @@
+import { searchDrinks } from "@/lib/drink";
+
 const regions = {
-  seoul: { name: "서울", description: "서울 지역의 전통주" },
   gyeonggi: { name: "경기도", description: "경기도 지역의 전통주" },
   gangwon: { name: "강원도", description: "강원도 지역의 전통주" },
   chungbuk: { name: "충청북도", description: "충청북도 지역의 전통주" },
@@ -18,6 +19,10 @@ export default async function RegionPage({ params }: { params: any }) {
     return <div>존재하지 않는 지역입니다.</div>;
   }
 
+  // 실제 데이터 fetch
+  const data = (await searchDrinks({ type: "region", keyword: region })) as any;
+  const products = data.items || [];
+
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1 container mx-auto px-4 py-8">
@@ -30,38 +35,38 @@ export default async function RegionPage({ params }: { params: any }) {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div
-              key={item}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
-              <div className="h-48 bg-gray-200">
-                <img
-                  src={`/placeholder.svg?height=192&width=384&text=${
-                    regions[region as keyof typeof regions].name
-                  } 전통주 ${item}`}
-                  alt={`$${
-                    regions[region as keyof typeof regions].name
-                  } 전통주 ${item}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-lg">
-                  {regions[region as keyof typeof regions].name} 전통주 {item}
-                </h3>
-                <p className="text-muted-foreground text-sm mt-1">
-                  종류 | 도수
-                </p>
-                <div className="flex justify-between items-center mt-4">
-                  <span className="font-bold">45,000원</span>
-                  <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 text-sm rounded-md transition-colors">
-                    장바구니
-                  </button>
+          {products.length === 0 ? (
+            <div>해당 지역의 상품이 없습니다.</div>
+          ) : (
+            products.map((item: any) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
+                <div className="h-48 bg-gray-200">
+                  <img
+                    src={item.imageUrl || "/placeholder.svg"}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="font-medium text-lg">{item.name}</h3>
+                  <p className="text-muted-foreground text-sm mt-1">
+                    {item.type} | {item.abv}%
+                  </p>
+                  <div className="flex justify-between items-center mt-4">
+                    <span className="font-bold">
+                      {item.price?.toLocaleString()}원
+                    </span>
+                    <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 text-sm rounded-md transition-colors">
+                      장바구니
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </main>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const regions = [
   { name: "경기도", code: "gyeonggi", top: "26%", left: "57%" },
@@ -28,6 +29,7 @@ const regionSvgs = [
 
 export default function KoreaMap() {
   const [hovered, setHovered] = useState<string | null>(null);
+  const router = useRouter();
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -55,9 +57,7 @@ export default function KoreaMap() {
             }}
             onMouseEnter={() => setHovered(region.code)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() =>
-              (window.location.href = `/categories/${region.code}`)
-            }
+            onClick={() => router.push(`/categories/${region.code}`)}
             aria-label={region.name}
           ></button>
         ))}

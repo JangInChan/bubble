@@ -632,18 +632,13 @@ export default function CartPage() {
         <div className="mb-6 flex items-center">
           <button
             type="button"
-            onClick={() => router.back()}
-            className="mr-3 focus:outline-none"
+            onClick={() => router.push("/")}
+            className="mr-3 focus:outline-none text-main font-jj font-36pt"
             aria-label="뒤로가기"
           >
-            <Image src="/back.svg" alt="뒤로가기" width={16} height={16} />
+            &lt; 장바구니
           </button>
-          <Image
-            src="/cart-title.svg"
-            alt="장바구니 타이틀"
-            width={133}
-            height={33}
-          />
+          {/* <span className="jj-title">장바구니</span> */}
         </div>
 
         {cartItems.length === 0 ? (

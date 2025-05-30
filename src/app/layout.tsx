@@ -22,14 +22,14 @@ export default function RootLayout({
   // 쿠키에 있는 refresh 토큰 검사 있으면 access 토큰 재발급 후 스토어에 넣어주기
   // 없으면 스토어에서 access 토큰 검사 -> 없으면 로그인 페이지로 이동
   return (
-    <html lang="ko" className="wf-loading">
+    <html lang="ko">
       <head>{/* meta, link 등만 이곳에 */}</head>
       <body className={inter.className}>
         {/* Adobe Fonts 스크립트는 Script로 body에 삽입 */}
         <Script id="adobe-fonts" strategy="beforeInteractive">
           {`(function(d) {
             var config = {
-              kitId: 'hx16zow',
+              kitId: 'csr0bws',
               scriptTimeout: 3000,
               async: true
             },
