@@ -5,6 +5,6 @@ import apiClient from "./api-client";
  * @returns {Promise<{id: number, name: string}[]>}
  */
 export async function getCategories() {
-  const response = await apiClient.get("/api/categories");
+  const response = await apiClient.get("/categories");
   return response.data;
 }

@@ -31,7 +31,7 @@ export async function createOrder(
       data: OrderResponse;
       timestamp: string;
       status: string;
-    }>("/api/order", {
+    }>("/order", {
       cartItemIds,
     });
     console.log("[Order] 주문 생성 완료", response.data);
@@ -64,7 +64,7 @@ export async function createOrder(
  * const history = await getOrderHistory();
  */
 export async function getOrderHistory() {
-  const response = await apiClient.get("/api/order/history");
+  const response = await apiClient.get("/order/history");
   return response.data;
 }
 
@@ -77,7 +77,7 @@ export async function getOrderHistory() {
  * await requestRefund(123, [456, 789]);
  */
 export async function requestRefund(orderId: number, orderDetailId: number[]) {
-  const response = await apiClient.post("/api/order/refund/request", {
+  const response = await apiClient.post("/order/refund/request", {
     orderId,
     orderDetailId,
   });

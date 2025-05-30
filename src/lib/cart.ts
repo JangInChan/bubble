@@ -31,7 +31,7 @@ export interface CartResponse {
  * console.log(cart.items);
  */
 export async function getCart(): Promise<CartResponse> {
-  const response = await apiClient.get<CartResponse>("/api/cart");
+  const response = await apiClient.get<CartResponse>("/cart");
   return response.data;
 }
 
@@ -42,7 +42,7 @@ export async function getCart(): Promise<CartResponse> {
  * @returns {Promise<any>} 변경 결과
  */
 export async function updateCartItemQuantity(cartId: number, quantity: number) {
-  const response = await apiClient.patch(`/api/cart/${cartId}`, { quantity });
+  const response = await apiClient.patch(`/cart/${cartId}`, { quantity });
   return response.data;
 }
 
@@ -78,7 +78,7 @@ export async function getCartBuyInfo(cartItemIds: number[]) {
  * @returns {Promise<any>} 삭제 결과
  */
 export async function deleteCartItems(cartIds: number[]) {
-  const response = await apiClient.delete(`/api/cart/delete`, {
+  const response = await apiClient.delete(`/cart/delete`, {
     data: { cartIds },
   } as any);
   return response.data;
@@ -91,6 +91,6 @@ export async function deleteCartItems(cartIds: number[]) {
  * @returns {Promise<any>} 상품 추가 정보
  */
 export async function addCartItems(drinkId: number, quantity: number) {
-  const response = await apiClient.post(`/api/cart/add`, { drinkId, quantity });
+  const response = await apiClient.post(`/cart/add`, { drinkId, quantity });
   return response.data;
 }

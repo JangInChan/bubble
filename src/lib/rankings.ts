@@ -10,7 +10,7 @@ import apiClient from "./api-client";
  * console.log(data.ranking); // [{ name, totalQuantity }, ...]
  */
 export async function getRankings(regionCode: number) {
-  const response = await apiClient.get("/api/rankings", {
+  const response = await apiClient.get("/rankings", {
     params: { regionCode },
   });
   return response.data;

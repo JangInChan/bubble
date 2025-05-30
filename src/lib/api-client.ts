@@ -1,19 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 
-// baseURL을 환경에 따라 동적으로 설정
-const baseURL =
-  typeof window === "undefined"
-    ? (() => {
-        if (!process.env.NEXT_PUBLIC_API_URL) {
-          throw new Error(
-            "NEXT_PUBLIC_API_URL 환경변수가 설정되어 있지 않습니다!"
-          );
-        }
-        console.log("서버 baseURL:", process.env.NEXT_PUBLIC_API_URL);
-        return process.env.NEXT_PUBLIC_API_URL;
-      })()
-    : ""; // 클라이언트 사이드
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const apiClient = axios.create({
   baseURL,
@@ -56,7 +44,7 @@ apiClient.interceptors.response.use(
 
       try {
         // 리프레시 토큰으로 새로운 액세스 토큰 발급 (쿠키 기반, body/params 없이 요청)
-        const response = await axios.post("/api/auth/refresh", null, {
+        const response = await axios.post("/auth/refresh", null, {
           withCredentials: true,
         });
 
