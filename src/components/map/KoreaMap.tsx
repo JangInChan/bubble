@@ -1,81 +1,34 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 
-// const regions = [
-//   {
-//     name: "서울",
-//     code: "seoul",
-//     top: "27%",
-//     left: "38%",
-//     description: "서울 지역의 전통주",
-//   },
-//   {
-//     name: "경기도",
-//     code: "gyeonggi",
-//     top: "20%",
-//     left: "42%",
-//     description: "경기도 지역의 전통주",
-//   },
-//   {
-//     name: "강원도",
-//     code: "gangwon",
-//     top: "20%",
-//     left: "58%",
-//     description: "강원도 지역의 전통주",
-//   },
-//   {
-//     name: "충청북도",
-//     code: "chungbuk",
-//     top: "38%",
-//     left: "50%",
-//     description: "충청북도 지역의 전통주",
-//   },
-//   {
-//     name: "충청남도",
-//     code: "chungnam",
-//     top: "42%",
-//     left: "35%",
-//     description: "충청남도 지역의 전통주",
-//   },
-//   {
-//     name: "전라북도",
-//     code: "jeonbuk",
-//     top: "58%",
-//     left: "38%",
-//     description: "전라북도 지역의 전통주",
-//   },
-//   {
-//     name: "전라남도",
-//     code: "jeonnam",
-//     top: "72%",
-//     left: "35%",
-//     description: "전라남도 지역의 전통주",
-//   },
-//   {
-//     name: "경상북도",
-//     code: "gyeongbuk",
-//     top: "48%",
-//     left: "66%",
-//     description: "경상북도 지역의 전통주",
-//   },
-//   {
-//     name: "경상남도",
-//     code: "gyeongnam",
-//     top: "67%",
-//     left: "58%",
-//     description: "경상남도 지역의 전통주",
-//   },
-//   {
-//     name: "제주도",
-//     code: "jeju",
-//     top: "92.6%",
-//     left: "27%",
-//     description: "제주도 지역의 전통주",
-//   },
-// ];
+const regions = [
+  { name: "경기도", code: "gyeonggi", top: "26%", left: "57%" },
+  { name: "강원도", code: "gangwon", top: "23%", left: "73%" },
+  { name: "충청북도", code: "chungbuk", top: "40%", left: "67%" },
+  { name: "충청남도", code: "chungnam", top: "46%", left: "54%" },
+  { name: "전라북도", code: "jeonbuk", top: "61%", left: "58%" },
+  { name: "전라남도", code: "jeonnam", top: "75%", left: "54%" },
+  { name: "경상북도", code: "gyeongbuk", top: "50%", left: "80%" },
+  { name: "경상남도", code: "gyeongnam", top: "68%", left: "76%" },
+  { name: "제주도", code: "jeju", top: "94.2%", left: "49%" },
+];
+
+const regionSvgs = [
+  { code: "gyeonggi", top: 22, left: 242 },
+  { code: "gangwon", top: 13, left: 253 },
+  { code: "chungbuk", top: 23, left: 253 },
+  { code: "chungnam", top: 23, left: 253 },
+  { code: "jeonbuk", top: 23, left: 253 },
+  { code: "jeonnam", top: 23, left: 235 },
+  { code: "gyeongbuk", top: 23, left: 253 },
+  { code: "gyeongnam", top: 23, left: 253 },
+  { code: "jeju", top: 23, left: 250 },
+];
 
 export default function KoreaMap() {
+  const [hovered, setHovered] = useState<string | null>(null);
+
   return (
     <div className="w-full flex justify-center items-center">
       <div className="relative w-full max-w-2xl">
@@ -84,23 +37,43 @@ export default function KoreaMap() {
           alt="한국 지도"
           className="w-full h-auto"
         />
-        {/* {regions.map((region) => (
-          <Link
+        {regions.map((region) => (
+          <button
             key={region.code}
-            href={`/categories/${region.code}`}
-            className="absolute group text-sm font-semibold text-white transition"
+            className="absolute z-10 rounded-full"
             style={{
               top: region.top,
               left: region.left,
+              width: 60,
+              height: region.code === "gyeongbuk" ? 100 : 40,
+              background: "transparent",
+              border: "none",
+              color: "transparent",
+              boxShadow: "none",
               transform: "translate(-50%, -50%)",
+              cursor: "pointer",
             }}
-          >
-            <span className="relative inline-block px-2 py-1">
-              <span className="absolute inset-0 rounded-full bg-primary-100 opacity-0 scale-75 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 z-[-1]" />
-              <span className="relative z-10">{region.name}</span>
-            </span>
-          </Link>
-        ))} */}
+            onMouseEnter={() => setHovered(region.code)}
+            onMouseLeave={() => setHovered(null)}
+            onClick={() =>
+              (window.location.href = `/categories/${region.code}`)
+            }
+            aria-label={region.name}
+          ></button>
+        ))}
+        {regionSvgs.map((svg) => (
+          <img
+            key={svg.code}
+            src={`/region/${svg.code}.svg`}
+            alt={svg.code}
+            className="absolute w-full h-auto pointer-events-none transition-opacity duration-200"
+            style={{
+              top: svg.top,
+              left: svg.left,
+              opacity: hovered === svg.code ? 1 : 0,
+            }}
+          />
+        ))}
       </div>
     </div>
   );
