@@ -633,7 +633,7 @@ export default function CartPage() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="mr-3 focus:outline-none text-main font-jj font-36pt"
+            className="mr-3 focus:outline-none text-main font-jj font-36pt cursor-pointer"
             aria-label="뒤로가기"
           >
             &lt; 장바구니

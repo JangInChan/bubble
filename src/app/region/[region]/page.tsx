@@ -1,72 +1,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { searchDrinks } from "@/lib/drink";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
-interface Drink {
-  id: number;
-  name: string;
-  price: number;
-  alcoholContent: number;
-  volume: number;
-  region: string;
-  category: {
-    id: number;
-    name: string;
-  };
-  thumbnailUrl: string;
-}
+// 영문 코드 → 한글 지역명 매핑
+const regionNameMap: Record<string, string> = {
+  gyeonggi: "경기도",
+  gangwon: "강원도",
+  chungbuk: "충청북도",
+  chungnam: "충청남도",
+  jeonbuk: "전라북도",
+  jeonnam: "전라남도",
+  gyeongbuk: "경상북도",
+  gyeongnam: "경상남도",
+  jeju: "제주도",
+};
 
-interface DrinkSearchResponse {
-  content: Drink[];
-}
-
-export default function CategoryDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
-  const [drinks, setDrinks] = useState<Drink[]>([]);
+export default function RegionPage() {
+  const { region } = useParams();
+  const regionStr = Array.isArray(region) ? region[0] : (region as string);
+  const [drinks, setDrinks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchDrinks() {
-      try {
-        const categoryId = parseInt(id, 10);
-
-        if (isNaN(categoryId)) {
-          throw new Error("유효하지 않은 카테고리 ID입니다.");
-        }
-
-        console.log("검색 파라미터:", {
-          type: "category",
-          keyword: categoryId.toString(),
-        });
-
-        const response = (await searchDrinks({
-          type: "category",
-          keyword: categoryId.toString(),
-        })) as DrinkSearchResponse;
-
-        console.log("API 응답:", response);
-
-        setDrinks(response.content);
-      } catch (err) {
-        console.error("API 에러:", err);
+    if (!regionStr) return;
+    const keyword = regionNameMap[regionStr] || regionStr;
+    searchDrinks({
+      type: "region",
+      keyword,
+    })
+      .then((data: any) => {
+        setDrinks(data.content || []);
+        setLoading(false);
+      })
+      .catch((err) => {
         setError(
           err instanceof Error
             ? err.message
             : "술 목록을 불러오는데 실패했습니다."
         );
-      } finally {
         setLoading(false);
-      }
-    }
+      });
+  }, [regionStr]);
 
-    fetchDrinks();
-  }, [id]);
-
+  if (!regionStr) return <div>지역이 지정되지 않았습니다.</div>;
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -74,7 +54,6 @@ export default function CategoryDetailPage() {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -86,20 +65,16 @@ export default function CategoryDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center gap-4 mb-6">
-        <Link
-          href="/categories"
-          className="text-orange-500 hover:text-orange-600"
-        >
-          ← 카테고리 목록
+        <Link href="/" className="text-orange-500 hover:text-orange-600">
+          ← 지역 선택
         </Link>
         <h1 className="text-2xl font-bold">
-          {drinks[0]?.category?.name || "카테고리"} 목록
+          {regionNameMap[regionStr] || regionStr} 전통주 목록
         </h1>
       </div>
-
       {drinks.length === 0 ? (
         <div className="text-center text-gray-500 py-8">
-          해당 카테고리의 술이 없습니다.
+          해당 지역의 술이 없습니다.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -125,7 +100,7 @@ export default function CategoryDetailPage() {
                   <p>도수: {drink.alcoholContent}%</p>
                   <p>용량: {drink.volume}ml</p>
                   <p className="text-orange-500 font-semibold mt-2">
-                    {drink.price.toLocaleString()}원
+                    {drink.price?.toLocaleString()}원
                   </p>
                 </div>
               </div>

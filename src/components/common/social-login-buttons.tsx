@@ -28,13 +28,12 @@ export default function SocialLoginButtons({
         {/* 카카오 버튼 */}
         <button
           onClick={() => onSocialLogin("kakao")}
-          className="w-full h-12 flex items-center justify-center rounded-md shadow-sm bg-[#FEE500] hover:bg-[#FDDC3F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FEE500] transition-colors"
-          style={{ height: "45px" }}
+          className="flex-1 h-[44px] bg-[#FEE500] text-[#3C1E1E] font-bold rounded-none flex items-center justify-center text-[15px] hover:bg-[#FDDC3F] transition-colors"
         >
           <div className="flex items-center">
             <svg
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               viewBox="0 0 18 18"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -44,11 +43,11 @@ export default function SocialLoginButtons({
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M9 0.5C4.02944 0.5 0 3.69844 0 7.68645C0 10.1734 1.55542 12.3607 3.93131 13.5659L2.93275 17.1151C2.84637 17.4087 3.19288 17.6406 3.44362 17.4563L7.60769 14.6479C8.06709 14.7037 8.53709 14.7324 9 14.7324C13.9706 14.7324 18 11.5745 18 7.58645C18 3.59844 13.9706 0.5 9 0.5Z"
-                fill="black"
+                fill="#3C1E1E"
               />
             </svg>
-            <span className="text-black text-base font-medium">
-              카카오 계정으로 {actionText}
+            <span className="text-[#3C1E1E] text-[15px] font-bold">
+              카카오 로그인
             </span>
           </div>
         </button>
@@ -56,13 +55,12 @@ export default function SocialLoginButtons({
         {/* 네이버 버튼 */}
         <button
           onClick={() => onSocialLogin("naver")}
-          className="w-full h-12 flex items-center justify-center rounded-md shadow-sm bg-[#03C75A] hover:bg-[#02B350] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#03C75A] transition-colors"
-          style={{ height: "45px" }}
+          className="flex-1 h-[44px] bg-[#03C75A] text-white font-bold rounded-none flex items-center justify-center text-[15px] hover:bg-[#02B350] transition-colors"
         >
           <div className="flex items-center">
             <svg
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               viewBox="0 0 18 18"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -73,8 +71,8 @@ export default function SocialLoginButtons({
                 fill="white"
               />
             </svg>
-            <span className="text-white text-base font-medium">
-              네이버 아이디로 {actionText}
+            <span className="text-white text-[15px] font-bold">
+              네이버 로그인
             </span>
           </div>
         </button>

@@ -120,7 +120,7 @@ export default function SearchPage() {
                 <img
                   src={drink.thumbnailUrl}
                   alt={drink.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
             )}

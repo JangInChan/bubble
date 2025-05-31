@@ -101,45 +101,54 @@ export default function Header() {
             style={{ top: "2px", right: "0vw" }}
           >
             {isLoggedIn ? (
-              <div className="relative" ref={dropdownRef}>
-                <button
+              <>
+                <Link
+                  href="/cart"
                   className="p-2 hover:text-white rounded-full flex items-center text-sub-light"
-                  onClick={toggleDropdown}
+                  aria-label="장바구니"
                 >
-                  <User className="h-5 w-5" />
-                  <span className="ml-2 hidden md:inline">{user?.name}</span>
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                    <Link
-                      href="/mypage"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      마이페이지
-                    </Link>
-                    {isAdmin && (
+                  <ShoppingCart className="h-5 w-5" />
+                </Link>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    className="p-2 hover:text-white rounded-full flex items-center text-sub-light"
+                    onClick={toggleDropdown}
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="ml-2 hidden md:inline">{user?.name}</span>
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                       <Link
-                        href="/admin"
+                        href="/mypage"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        <div className="flex items-center">
-                          <Settings className="h-4 w-4 mr-2" />
-                          관리자 페이지
-                        </div>
+                        마이페이지
                       </Link>
-                    )}
-                    <button
-                      onClick={() => {
-                        logout();
-                        setIsDropdownOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      로그아웃
-                    </button>
-                  </div>
-                )}
-              </div>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          <div className="flex items-center">
+                            <Settings className="h-4 w-4 mr-2" />
+                            관리자 페이지
+                          </div>
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        로그아웃
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <div className="flex items-center space-x-1">
                 <Link

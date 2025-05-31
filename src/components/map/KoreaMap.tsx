@@ -57,7 +57,7 @@ export default function KoreaMap() {
             }}
             onMouseEnter={() => setHovered(region.code)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => router.push(`/categories/${region.code}`)}
+            onClick={() => router.push(`/region/${region.code}`)}
             aria-label={region.name}
           ></button>
         ))}
