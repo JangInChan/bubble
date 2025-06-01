@@ -22,6 +22,7 @@ interface Drink {
   };
   thumbnailUrl: string;
   drinkImageUrlList: string[];
+  _like?: boolean;
 }
 
 export default function DrinkPage() {
@@ -32,6 +33,7 @@ export default function DrinkPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [quantity, setQuantity] = useState("");
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   useEffect(() => {
     async function fetchDrink() {
@@ -43,6 +45,7 @@ export default function DrinkPage() {
         const data = (await getDrink(drinkId)) as Drink;
         setDrink(data);
         setSelectedImage(data.thumbnailUrl);
+        setIsWishlisted(!!data._like);
       } catch (err) {
         console.error("상품 정보 조회 실패:", err);
         setError(
@@ -58,21 +61,58 @@ export default function DrinkPage() {
     fetchDrink();
   }, [params.id]);
 
+  useEffect(() => {
+    console.log("[isWishlisted 상태 변경]", isWishlisted);
+  }, [isWishlisted]);
+
   const handleWishlist = async () => {
-    if (!drink) return;
+    if (!drink || wishlistLoading) return;
+    setWishlistLoading(true);
     try {
       if (isWishlisted) {
+        console.log("[찜취소] 시작 - 현재 상태:", {
+          isWishlisted,
+          drinkId: drink.id,
+        });
         await deleteWishList(drink.id);
-        setIsWishlisted(false);
+        console.log("[찜취소] API 호출 성공");
+        const updated = (await getDrink(drink.id)) as Drink;
+        console.log("[찜취소 getDrink 응답]", updated);
+        console.log("[찜취소 getDrink is_like]", updated._like);
+        setIsWishlisted(!!updated._like);
         alert("찜 목록에서 제거되었습니다.");
       } else {
-        console.log("요청:", drink.id);
+        console.log("[찜하기] 시작 - 현재 상태:", {
+          isWishlisted,
+          drinkId: drink.id,
+        });
         await addWishList(drink.id);
-        setIsWishlisted(true);
+        console.log("[찜하기] API 호출 성공");
+        const updated = (await getDrink(drink.id)) as Drink;
+        console.log("[찜하기 getDrink 응답]", updated);
+        console.log("[찜하기 getDrink is_like]", updated._like);
+        setIsWishlisted(!!updated._like);
         alert("찜 목록에 추가되었습니다.");
       }
-    } catch (e) {
-      alert("찜하기 처리 중 오류가 발생했습니다.");
+    } catch (e: any) {
+      console.error("[찜하기/취소] 에러 발생:", {
+        message: e.message,
+        response: e.response?.data,
+        status: e.response?.status,
+        headers: e.response?.headers,
+        config: {
+          url: e.config?.url,
+          method: e.config?.method,
+          headers: e.config?.headers,
+        },
+      });
+      alert(
+        e?.response?.data?.message ||
+          e?.message ||
+          "찜하기 처리 중 오류가 발생했습니다."
+      );
+    } finally {
+      setWishlistLoading(false);
     }
   };
 
@@ -192,7 +232,7 @@ export default function DrinkPage() {
             }}
           />
           <div className="flex items-center justify-between mb-2">
-            <h1 className="font-pretendard text-main text-[21px] font-extrabold">
+            <h1 className="font-pretendard text-main text-[21px] font-extrabold leading-none mb-6">
               {drink.name}
             </h1>
             <button
