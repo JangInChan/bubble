@@ -269,15 +269,6 @@ export default function DrinkPage() {
             </div>
           </div>
 
-          {/* {drink.description && (
-            <div className="border-t pt-6">
-              <h2 className="text-xl font-semibold mb-4">상품 설명</h2>
-              <p className="text-gray-600 whitespace-pre-line">
-                {drink.description}
-              </p>
-            </div>
-          )} */}
-
           <div className="border-t border-sub-light pt-6 space-y-4">
             <div className="flex gap-4">
               <button
@@ -339,6 +330,35 @@ export default function DrinkPage() {
                 </span>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 상품 정보(상세페이지) - container 내부, 메인 아래 */}
+      <div className="container mx-auto px-4">
+        <div className="pt-6 mt-8">
+          <h2 className="border-b border-b-main text-[21px] font-pretendard font-semibold text-main mb-4 pb-3">
+            상품 정보
+          </h2>
+          <p className="text-gray-500 text-sm mb-4">
+            예약 배송 상품과 일반 상품을 함께 구매하실 때, 출고일이 일주일
+            내외로 차이날 경우 예약배송 상품 출고일에 합배송 되는 점 양해
+            부탁드립니다.
+          </p>
+          <div className="w-full min-h-[800px] bg-gray-100 p-8 flex flex-col items-center justify-center">
+            {drink.drinkImageUrlList && drink.drinkImageUrlList.length > 0 ? (
+              drink.drinkImageUrlList.map((url, idx) => (
+                <img
+                  key={idx}
+                  src={url}
+                  alt={`상세 이미지 ${idx + 1}`}
+                  className="mb-6 max-w-full h-auto mx-auto"
+                  style={{ maxWidth: 700 }}
+                />
+              ))
+            ) : (
+              <span className="text-gray-400">상세페이지</span>
+            )}
           </div>
         </div>
       </div>
