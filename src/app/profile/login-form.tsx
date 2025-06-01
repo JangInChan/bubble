@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/components/common/auth-provider";
@@ -24,6 +24,8 @@ export default function LoginForm() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [tab, setTab] = useState("user");
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -99,8 +101,8 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center min-h-screen w-full">
+    <div className="bg-gray-100 flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full min-h-[780px]">
         <div className="w-full flex flex-col items-center">
           {/* 로고 */}
           <div className="flex justify-center mb-6">
@@ -136,7 +138,7 @@ export default function LoginForm() {
               </button>
             </div>
             {/* 입력폼만 form으로 감쌈 */}
-            <form className="px-8 h-32" onSubmit={handleSubmit}>
+            <form ref={formRef} className="px-8 h-32" onSubmit={handleSubmit}>
               <input
                 id="loginId"
                 name="loginId"
@@ -157,6 +159,8 @@ export default function LoginForm() {
                 placeholder="비밀번호"
                 className="w-full bg-transparent py-6 px-0 text-[18px] text-main focus:outline-none placeholder-sub-dark border-none"
               />
+              {/* 숨겨진 submit 버튼 */}
+              <button type="submit" style={{ display: "none" }} tabIndex={-1} />
             </form>
           </div>
           {/* 카드 밖(아래)에 체크박스/찾기/로그인/소셜로그인 */}
@@ -178,7 +182,7 @@ export default function LoginForm() {
             </div>
             <button
               type="button"
-              onClick={handleSubmit}
+              onClick={() => formRef.current?.requestSubmit()}
               className="w-full h-[68px] relative text-white text-[18px] font-bold rounded-none mb-4 mt-2 font-pretendard tracking-wider border-none overflow-hidden flex items-center justify-center cursor-pointer"
             >
               {/* 배경 이미지 */}

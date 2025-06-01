@@ -31,7 +31,7 @@ export default function DrinkPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState("");
 
   useEffect(() => {
     async function fetchDrink() {
@@ -80,7 +80,7 @@ export default function DrinkPage() {
     if (!drink) return;
     try {
       console.log("요청:", drink.id, quantity);
-      await addCartItems(drink.id, quantity);
+      await addCartItems(drink.id, Number(quantity));
       alert("장바구니에 담았습니다!");
     } catch (e) {
       alert("장바구니 담기 실패");
@@ -131,7 +131,7 @@ export default function DrinkPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* 이미지 섹션 */}
         <div className="space-y-4">
-          <div className="relative aspect-square w-full overflow-hidden rounded-lg">
+          <div className="relative aspect-square max-w-[480px] mx-auto overflow-hidden rounded-lg">
             <Image
               src={selectedImage || drink.thumbnailUrl}
               alt={drink.name}
@@ -184,11 +184,27 @@ export default function DrinkPage() {
 
         {/* 상품 정보 섹션 */}
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{drink.name}</h1>
-            <p className="text-2xl font-semibold text-orange-500">
-              {drink.price.toLocaleString()}원
-            </p>
+          <div
+            className="mb-6"
+            style={{
+              borderTop: "5px solid #0E2E40",
+              width: "100%",
+            }}
+          />
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="font-pretendard text-main text-[21px] font-extrabold">
+              {drink.name}
+            </h1>
+            <button
+              className="flex flex-col items-center border-none bg-transparent cursor-pointer"
+              style={{ color: isWishlisted ? "#FF9100" : "#B18B6C" }}
+              onClick={handleWishlist}
+            >
+              <Image src="/찜하기.svg" alt="찜하기" width={32} height={32} />
+              <span className="font-pretendard font-light mt-1">
+                {isWishlisted ? "찜한 상품" : "찜하기"}
+              </span>
+            </button>
           </div>
 
           <div className="space-y-4">
@@ -210,6 +226,47 @@ export default function DrinkPage() {
                 <p className="font-medium">{drink.volume}ml</p>
               </div>
             </div>
+            <p className="font-pretendard text-[32px] font-extrabold text-main">
+              {drink.price.toLocaleString()}원
+            </p>
+            {/* 수량 선택 드롭다운 - selected.svg를 배경으로 사용 (가격 아래로 이동, 비율 유지) */}
+            <div
+              className="relative w-full max-w-[658px] mb-4"
+              style={{ aspectRatio: "658 / 37", height: "auto" }}
+            >
+              <img
+                src="/selected.svg"
+                alt="수량선택"
+                className="absolute left-0 top-0 w-full h-full pointer-events-none"
+                draggable={false}
+                style={{ objectFit: "contain" }}
+              />
+              <select
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="absolute left-0 top-0 w-full h-full font-pretendard bg-transparent border-none appearance-none focus:outline-none flex items-center justify-center cursor-pointer"
+                style={{
+                  zIndex: 1,
+                  fontWeight: quantity === "" ? 300 : 500,
+                  height: "100%",
+                  lineHeight: "normal",
+                  padding: "0 16px",
+                  fontSize: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  color: quantity === "" ? "#7D7D7D" : "#0E2E40",
+                }}
+              >
+                <option value="" disabled hidden>
+                  수량 선택
+                </option>
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={String(i + 1)}>
+                    {i + 1}개
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* {drink.description && (
@@ -221,49 +278,65 @@ export default function DrinkPage() {
             </div>
           )} */}
 
-          <div className="border-t pt-6 space-y-4">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="w-10 h-10 flex items-center justify-center border rounded text-lg"
-                type="button"
-              >
-                -
-              </button>
-              <span className="w-10 text-center text-lg">{quantity}</span>
-              <button
-                onClick={() => setQuantity((q) => q + 1)}
-                className="w-10 h-10 flex items-center justify-center border rounded text-lg"
-                type="button"
-              >
-                +
-              </button>
-            </div>
+          <div className="border-t border-sub-light pt-6 space-y-4">
             <div className="flex gap-4">
               <button
-                onClick={handleWishlist}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border transition-colors ${
-                  isWishlisted
-                    ? "border-orange-500 text-orange-500 hover:bg-orange-50"
-                    : "border-gray-300 text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                <Heart
-                  className={`w-5 h-5 ${isWishlisted ? "fill-orange-500" : ""}`}
-                />
-                {isWishlisted ? "찜한 상품" : "찜하기"}
-              </button>
-              <button
                 onClick={handleAddToCart}
-                className="flex-1 bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors"
+                className="flex-1 relative flex items-center justify-center py-3 cursor-pointer"
+                style={{
+                  height: "56px",
+                  minWidth: "0",
+                  padding: 0,
+                  background: "none",
+                  border: "none",
+                }}
               >
-                장바구니 담기
+                <img
+                  src="/cart.svg"
+                  alt="장바구니"
+                  className="absolute left-0 top-0 w-full h-full"
+                  style={{
+                    objectFit: "contain",
+                    zIndex: 0,
+                    pointerEvents: "none",
+                  }}
+                  draggable={false}
+                />
+                <span
+                  className="relative z-10 font-bold text-[21px] text-[#B18B6C] font-pretendard"
+                  style={{ pointerEvents: "none" }}
+                >
+                  장바구니
+                </span>
               </button>
               <button
                 onClick={handleBuyNow}
-                className="flex-1 bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors"
+                className="flex-1 relative flex items-center justify-center py-3 cursor-pointer"
+                style={{
+                  height: "56px",
+                  minWidth: "0",
+                  padding: 0,
+                  background: "none",
+                  border: "none",
+                }}
               >
-                바로 구매하기
+                <img
+                  src="/buy.svg"
+                  alt="구매하기"
+                  className="absolute left-0 top-0 w-full h-full"
+                  style={{
+                    objectFit: "contain",
+                    zIndex: 0,
+                    pointerEvents: "none",
+                  }}
+                  draggable={false}
+                />
+                <span
+                  className="relative z-10 font-bold text-[21px] text-white font-pretendard"
+                  style={{ pointerEvents: "none" }}
+                >
+                  구매하기
+                </span>
               </button>
             </div>
           </div>

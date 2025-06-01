@@ -108,12 +108,12 @@ export default function SearchPage() {
       {!loading && !error && drinks.length === 0 && keywordParam && (
         <div className="text-center text-gray-500">검색 결과가 없습니다.</div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {drinks.map((drink) => (
           <Link
             key={drink.id}
-            href={`/drinks/${drink.id}`}
-            className="block border rounded-lg overflow-hidden bg-white shadow hover:shadow-lg transition"
+            href={`/drink/${drink.id}`}
+            className="block overflow-hidden bg-white hover:shadow-lg transition"
           >
             {drink.thumbnailUrl && (
               <div className="relative h-48">
@@ -125,13 +125,15 @@ export default function SearchPage() {
               </div>
             )}
             <div className="p-4">
-              <h2 className="text-lg font-semibold mb-2">{drink.name}</h2>
+              <h2 className="text-lg font-pretendard font-18pt font-extrabold mb-2">
+                {drink.name}
+              </h2>
               <div className="text-gray-600">
                 <p>지역: {drink.region}</p>
                 <p>도수: {drink.alcoholContent}%</p>
                 <p>용량: {drink.volume}ml</p>
-                <p className="text-orange-500 font-semibold mt-2">
-                  {drink.price.toLocaleString()}원
+                <p className="font-pretendard font-18pt font-extrabold text-main mt-2">
+                  {drink.price?.toLocaleString()}원
                 </p>
               </div>
             </div>

@@ -16,8 +16,8 @@
   /* 폰트 */
   --font-inter: "Inter", sans-serif;
   --font-pretendard: "pretendard", sans-serif;
-  --font-noh: "Noh 옵티크", "optique-display", serif;
-  --font-jj: "jjblackrose", serif;
+  --font-noh: "optique-display", sans-serif;
+  --font-jj: "jjblackrose", sans-serif;
 }
 
 /* 리셋 및 기본 레이아웃 */
@@ -50,6 +50,14 @@
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  /* 추가: input과 textarea의 placeholder에 대한 폰트 및 색상 설정 */
+  input::placeholder,
+  textarea::placeholder {
+    /* font-family: var(--font-pretendard), "Pretendard", var(--font-noh), var(--font-jj), "Inter", sans-serif; */
+    color: var(--color-sub-dark);
+    opacity: 1;
   }
 }
 
@@ -144,4 +152,8 @@
   font-weight: 400;
   font-size: 36pt;
   color: #0e2e40;
+}
+
+input.search-placeholder-fix::placeholder {
+  font-family: optique-display, sans-serif !important;
 }

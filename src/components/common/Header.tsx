@@ -197,14 +197,12 @@ export default function Header() {
               className="absolute left-0 top-0 w-full h-full z-0"
             />
             {/* 왼쪽 placeholder 텍스트 (가이드 적용, globals.css 유틸리티만 사용) */}
-            {/* {searchValue === "" && (
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none font-noh font-regular text-[18px] text-white select-none">
-                검색어를 입력해 주세요
-              </span>
-            )} */}
+            {searchValue === "" && (
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none font-noh font-regular text-[18px] text-white select-none"></span>
+            )}
             <input
               type="text"
-              className="pl-4 pr-10 py-2 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh font-regular text-[18px] text-white placeholder:text-sub-light placeholder:translate-y-[2px]"
+              className="pl-4 pr-10 py-2 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh text-[18px] text-white placeholder:text-sub-light placeholder:translate-y-[2px] search-placeholder-fix"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="검색어를 입력해 주세요"

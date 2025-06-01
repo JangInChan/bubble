@@ -68,7 +68,7 @@ export default function RegionPage() {
         <Link href="/" className="text-orange-500 hover:text-orange-600">
           ← 지역 선택
         </Link>
-        <h1 className="text-2xl font-bold">
+        <h1 className="font-pretendard text-main font-32pt font-extrabold">
           {regionNameMap[regionStr] || regionStr} 전통주 목록
         </h1>
       </div>
@@ -77,12 +77,12 @@ export default function RegionPage() {
           해당 지역의 술이 없습니다.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {drinks.map((drink) => (
             <Link
               key={drink.id}
               href={`/drink/${drink.id}`}
-              className="block border rounded-lg overflow-hidden bg-white shadow hover:shadow-lg transition"
+              className="block overflow-hidden bg-white hover:shadow-lg transition"
             >
               {drink.thumbnailUrl && (
                 <div className="relative h-48">
@@ -94,12 +94,14 @@ export default function RegionPage() {
                 </div>
               )}
               <div className="p-4">
-                <h2 className="text-lg font-semibold mb-2">{drink.name}</h2>
+                <h2 className="text-lg font-pretendard font-18pt font-extrabold mb-2">
+                  {drink.name}
+                </h2>
                 <div className="text-gray-600">
                   <p>지역: {drink.region}</p>
                   <p>도수: {drink.alcoholContent}%</p>
                   <p>용량: {drink.volume}ml</p>
-                  <p className="text-orange-500 font-semibold mt-2">
+                  <p className="font-pretendard font-18pt font-extrabold text-main mt-2">
                     {drink.price?.toLocaleString()}원
                   </p>
                 </div>
