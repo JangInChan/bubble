@@ -10,7 +10,7 @@ export interface CartItem {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  thumbnailUrl?: string;
+  imageUrl?: string;
 }
 
 /**
