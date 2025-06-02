@@ -61,19 +61,20 @@ export default function KoreaMap() {
             aria-label={region.name}
           ></button>
         ))}
-        {regionSvgs.map((svg) => (
-          <img
-            key={svg.code}
-            src={`/region/${svg.code}.svg`}
-            alt={svg.code}
-            className="absolute w-full h-auto pointer-events-none transition-opacity duration-200"
-            style={{
-              top: svg.top,
-              left: svg.left,
-              opacity: hovered === svg.code ? 1 : 0,
-            }}
-          />
-        ))}
+        {regionSvgs.map((svg) =>
+          hovered === svg.code ? (
+            <img
+              key={svg.code}
+              src={`/region/${svg.code}.svg`}
+              alt={svg.code}
+              className="absolute w-full h-auto pointer-events-none"
+              style={{
+                top: svg.top,
+                left: svg.left,
+              }}
+            />
+          ) : null
+        )}
       </div>
     </div>
   );

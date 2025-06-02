@@ -37,8 +37,8 @@ export default function UsersPage() {
     const fetchUsers = async () => {
       try {
         const response: any = await getUsers(currentPage, pageSize);
-        // 실제 API 응답 구조에 맞게 파싱
-        const userData = response.data.content.map((item: any) => ({
+        // 실제 API 응답 구조에 맞게 파싱 (방어코드 추가)
+        const userData = (response?.data?.content ?? []).map((item: any) => ({
           userId: item.userId,
           loginId: item.loginId,
           name: item.name,
@@ -49,8 +49,10 @@ export default function UsersPage() {
           role: item.role,
         }));
         setUsers(userData);
-        setTotalPages(response.data.totalPages);
+        setTotalPages(response?.data?.totalPages ?? 0);
       } catch (error) {
+        setUsers([]); // 에러 시에도 빈 배열로
+        setTotalPages(0);
         console.error("유저 데이터를 불러오는데 실패했습니다:", error);
       }
     };
@@ -67,124 +69,116 @@ export default function UsersPage() {
   });
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">회원 관리</h1>
-        <p className="text-gray-500">회원 정보를 관리하고 상태를 변경하세요.</p>
-      </div>
-
-      {/* 검색 및 필터 */}
-      <div className="bg-white rounded-lg shadow mb-6">
-        <div className="p-6 flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+    <div className="w-full flex flex-col items-center bg-white min-h-screen">
+      <div className="w-full max-w-[1100px] mt-15">
+        <div className="mb-4">
+          <h1 className="text-[21px] font-pretendard font-medium text-main mb-0 text-left">
+            회원관리
+          </h1>
+        </div>
+        {/* 검색 및 필터 */}
+        <div className="flex items-center mb-4">
+          <div className="relative flex-1 max-w-[600px] h-[80px]">
+            {/* 검색창 SVG 배경 */}
+            <img
+              src="/user-search.svg"
+              alt="검색창"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[80px] pointer-events-none select-none"
+              draggable={false}
+            />
+            {/* 검색 아이콘은 기존대로 */}
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#B0B8C1] w-6 h-6 z-10" />
+            {/* input은 SVG 내부에 맞게 */}
             <input
               type="text"
-              placeholder="이름, 이메일, 전화번호 검색..."
-              className="pl-10 pr-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="이름, 이메일, 전화번호 검색"
+              className="absolute left-0 top-0 w-full h-full bg-transparent border-none outline-none pl-14 pr-[140px] text-[17px] font-pretendard placeholder:font-light z-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ minWidth: 0 }}
             />
-          </div>
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <select
-              className="pl-10 pr-8 py-2 border rounded-md appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              value={selectedStatus || ""}
-              onChange={(e) => setSelectedStatus(e.target.value || null)}
+            {/* 카테고리 필터 버튼을 검색창 내부 오른쪽에 배치 */}
+            <button
+              className="absolute right-1 top-1/2 -translate-y-1/2 px-5 h-[40px] min-w-[80px] bg-transparent font-pretendard font-light text-[15px] text-[#B18B6C] flex items-center justify-center z-20"
+              style={{ boxShadow: "none" }}
+              disabled
             >
-              <option value="">모든 상태</option>
-              <option value="활성">활성</option>
-              <option value="비활성">비활성</option>
-              <option value="정지">정지</option>
-            </select>
+              카테고리 필터
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* 유저 목록 테이블 */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        {/* 회원 테이블 */}
+        <div className="bg-white overflow-hidden shadow-none border-t-3 border-main">
+          <table className="w-full text-center">
             <thead>
-              <tr className="bg-gray-50 text-left text-gray-600 text-sm">
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    ID
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">이름</th>
-                <th className="px-6 py-3 font-medium">이메일</th>
-                <th className="px-6 py-3 font-medium">전화번호</th>
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    가입일
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    주문수
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">관리</th>
+              <tr className="text-main font-pretendard text-[18px] font-light bg-white border-b border-[#E5EAF2]">
+                <th className="py-3 px-2 font-medium">ID</th>
+                <th className="py-3 px-2 font-medium">이름</th>
+                <th className="py-3 px-2 font-medium">이메일</th>
+                <th className="py-3 px-2 font-medium">전화번호</th>
+                <th className="py-3 px-2 font-medium">가입일</th>
+                <th className="py-3 px-2 font-medium">주문수</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredUsers.map((user) => (
-                <tr key={user.userId} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm">{user.loginId}</td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium">{user.name}</div>
-                  </td>
-                  <td className="px-6 py-4 text-sm">{user.email}</td>
-                  <td className="px-6 py-4 text-sm">{user.phoneNumber}</td>
-                  <td className="px-6 py-4 text-sm">
-                    {user.createdAt ? user.createdAt.slice(0, 10) : ""}
-                  </td>
-                  <td className="px-6 py-4 text-sm">{user.role}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                      <button
-                        className="p-1 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100"
-                        title="회원 상세 정보"
-                      >
-                        <Eye className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            <tbody>
+              {filteredUsers.map((user, idx) => {
+                const isLast = idx === filteredUsers.length - 1;
+                return (
+                  <tr
+                    key={user.userId}
+                    className={
+                      "bg-white hover:bg-[#F7F7F7] " +
+                      (isLast
+                        ? "border-b-2 border-sub-dark"
+                        : "border-b border-[#E5EAF2]")
+                    }
+                  >
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-sub-dark font-light">
+                      {user.loginId}
+                    </td>
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-main">
+                      {user.name}
+                    </td>
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-sub-dark font-light">
+                      {user.email}
+                    </td>
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-sub-dark font-light">
+                      {user.phoneNumber}
+                    </td>
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-sub-dark font-light">
+                      {user.createdAt ? user.createdAt.slice(0, 10) : ""}
+                    </td>
+                    <td className="py-3 px-2 text-[15px] font-pretendard text-sub-dark font-light">
+                      2건
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-        </div>
-
-        {/* 페이지네이션 */}
-        <div className="px-6 py-4 flex items-center justify-between border-t">
-          <div className="text-sm text-gray-500">
-            총 <span className="font-medium">{filteredUsers.length}</span>명의
-            회원
-          </div>
-          <div className="flex space-x-2">
-            <button
-              className="p-2 rounded-md border hover:bg-gray-50"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button className="px-3 py-1 rounded-md bg-orange-600 text-white">
-              {currentPage}
-            </button>
-            <button
-              className="p-2 rounded-md border hover:bg-gray-50"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+          {/* 하단 요약/페이지네이션 */}
+          <div className="flex items-center justify-between px-2 py-4 bg-white">
+            <div className="text-[15px] text-[#222] text-left">
+              총 <span className="font-bold">{filteredUsers.length}</span>명의
+              회원
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                className="w-7 h-7 flex items-center justify-center rounded bg-white text-[#222] disabled:opacity-40"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-[15px] px-2">page{currentPage}</span>
+              <button
+                className="w-7 h-7 flex items-center justify-center rounded bg-white text-[#222] disabled:opacity-40"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

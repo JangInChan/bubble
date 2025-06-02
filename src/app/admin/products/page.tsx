@@ -186,7 +186,7 @@ export default function ProductsPage() {
               className="absolute  left-0 top-0 w-full h-full z-0"
               style={{ objectFit: "cover" }}
             />
-            <span className="relative z-10 w-full text-center font-pretendard font-light text-[18px] text-sub-light select-none">
+            <span className="relative z-10 w-full text-center font-pretendard font-light text-[18px] text-white select-none">
               + 새 상품 등록
             </span>
           </Link>
