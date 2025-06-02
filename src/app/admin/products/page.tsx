@@ -12,8 +12,10 @@ import {
   ChevronRight,
   ArrowUpDown,
   RefreshCw,
+  Search as SearchIcon,
 } from "lucide-react";
-import { deleteDrink, getDrink, restoreDrink } from "@/lib/drink";
+import { deleteDrink, getDrink, restoreDrink, searchDrinks } from "@/lib/drink";
+import Image from "next/image";
 
 // 상품 타입 정의
 interface Product {
@@ -23,32 +25,49 @@ interface Product {
   price: string;
   stock: number;
   status: "판매중" | "품절" | "숨김";
+  thumbnailUrl: string;
+  option?: string;
+  salesCount?: number;
+  weeklySales?: number;
 }
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    // 예시: 1~10번 상품을 불러온다고 가정 (실제 구현 시 전체 목록 API 필요)
-    Promise.all(
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) =>
-        getDrink(id).catch(() => null)
-      )
-    ).then((drinks) => {
-      setProducts(
-        drinks.filter(Boolean).map((drink: any) => ({
-          id: drink.id,
-          name: drink.name,
-          category: drink.category?.name || "",
-          price: drink.price.toLocaleString() + "원",
-          stock: drink.stock,
-          status: drink.is_delete ? "숨김" : "판매중",
-        }))
-      );
-    });
-  }, []);
-
+  const [selected, setSelected] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const data: any = await searchDrinks({
+          type: "name",
+          keyword: searchTerm,
+          pageNum,
+        });
+        setProducts(
+          (data.content || data.data || []).map((drink: any) => ({
+            id: drink.id,
+            name: drink.name,
+            category: drink.category?.name || "",
+            price: drink.price.toLocaleString() + "원",
+            stock: drink.stock,
+            status: drink.is_delete ? "숨김" : "판매중",
+            thumbnailUrl: drink.thumbnailUrl || "/noimg.png",
+            option: drink.option,
+            salesCount: drink.salesCount,
+            weeklySales: drink.weeklySales,
+          }))
+        );
+        setTotalPages(data.totalPages);
+      } catch (e) {
+        setProducts([]);
+      }
+    }
+    fetchProducts();
+  }, [searchTerm, pageNum]);
 
   // 상품 삭제 핸들러 (soft delete)
   const handleDeleteProduct = async (id: number) => {
@@ -77,6 +96,20 @@ export default function ProductsPage() {
     }
   };
 
+  // 체크박스 핸들러
+  const handleSelect = (id: number) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    );
+  };
+  const handleSelectAll = () => {
+    if (selected.length === products.length) {
+      setSelected([]);
+    } else {
+      setSelected(products.map((p) => p.id));
+    }
+  };
+
   // 필터링된 상품 목록
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name
@@ -94,43 +127,46 @@ export default function ProductsPage() {
   );
 
   return (
-    <div>
-      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold mb-2">상품 관리</h1>
-          <p className="text-gray-500">
-            전통주 상품을 관리하고 새 상품을 등록하세요.
-          </p>
+    <div className="w-full px-8 py-8">
+      {/* 상단 타이틀/검색/필터/버튼 */}
+      <div className="mb-6">
+        <div className="font-pretendard text-[21px] font-extrabold text-main mb-4">
+          상품관리
         </div>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
-        >
-          <Plus className="w-5 h-5 mr-2" />새 상품 등록
-        </Link>
-      </div>
-
-      {/* 검색 및 필터 */}
-      <div className="bg-white rounded-lg shadow mb-6">
-        <div className="p-6 flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <div className="flex items-center w-full border-b border-[#D9D9D9] pb-4 justify-start gap-4">
+          <div
+            className="relative flex items-center"
+            style={{ width: 728, height: 54 }}
+          >
+            {/* SVG 배경 */}
+            <Image
+              src="/white-search-bg.svg"
+              alt="검색창"
+              fill
+              className="absolute left-0 top-0 w-full h-full z-0"
+            />
+            {/* 돋보기 아이콘 */}
+            <span className="absolute left-6 top-1/2 -translate-y-1/2 z-10 text-[#B0B8C1]">
+              <SearchIcon className="w-7 h-7" />
+            </span>
+            {/* input */}
             <input
               type="text"
-              placeholder="상품명 검색..."
-              className="pl-10 pr-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="상품명 검색"
+              className="relative z-10 font-noh bg-transparent border-none focus:outline-none text-[20px] text-[#333] pl-16 pr-4 h-full flex-1"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              maxLength={40}
+              style={{ minWidth: 0 }}
             />
-          </div>
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            {/* select */}
             <select
-              className="pl-10 pr-8 py-2 border rounded-md appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="relative z-10 bg-transparent text-[#B18B6C] text-base border-none border-b border-[#B18B6C] min-w-[150px] h-[42px] cursor-pointer font-pretendard font-light ml-3"
               value={selectedCategory || ""}
               onChange={(e) => setSelectedCategory(e.target.value || null)}
+              style={{ marginRight: 20 }}
             >
-              <option value="">모든 카테고리</option>
+              <option value="">카테고리 필터</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -138,126 +174,153 @@ export default function ProductsPage() {
               ))}
             </select>
           </div>
+          <Link
+            href="/admin/products/new"
+            className="relative ml-63 flex items-center justify-center"
+            style={{ width: 180, height: 53 }}
+          >
+            <Image
+              src="/addDrinkButton.svg"
+              alt="새 상품 등록"
+              fill
+              className="absolute  left-0 top-0 w-full h-full z-0"
+              style={{ objectFit: "cover" }}
+            />
+            <span className="relative z-10 w-full text-center font-pretendard font-light text-[18px] text-sub-light select-none">
+              + 새 상품 등록
+            </span>
+          </Link>
         </div>
       </div>
 
-      {/* 상품 목록 테이블 */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 text-left text-gray-600 text-sm">
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    ID
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    상품명
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">카테고리</th>
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    가격
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">
-                  <div className="flex items-center">
-                    재고
-                    <ArrowUpDown className="w-4 h-4 ml-1" />
-                  </div>
-                </th>
-                <th className="px-6 py-3 font-medium">상태</th>
-                <th className="px-6 py-3 font-medium">관리</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm">{product.id}</td>
-                  <td className="px-6 py-4">
-                    <div className="font-medium">{product.name}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
-                      {product.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm">{product.price}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <span className={product.stock === 0 ? "text-red-500" : ""}>
-                      {product.stock}개
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        product.status === "판매중"
-                          ? "bg-green-100 text-green-800"
-                          : product.status === "품절"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {product.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex space-x-2">
-                      <Link
-                        href={`/admin/products/${product.id}/edit`}
-                        className="p-1 text-blue-600 hover:text-blue-800 rounded-full hover:bg-blue-100"
-                      >
-                        <Edit className="w-5 h-5" />
-                      </Link>
-                      {product.status === "숨김" ? (
-                        <button
-                          onClick={() => handleRestoreProduct(product.id)}
-                          className="p-1 text-green-600 hover:text-green-800 rounded-full hover:bg-green-100"
-                        >
-                          <RefreshCw className="w-5 h-5" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="p-1 text-red-600 hover:text-red-800 rounded-full hover:bg-red-100"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* 전체선택/선택삭제/상태필터 */}
+      <div className="flex items-center gap-4 mb-4">
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={
+              selected.length === filteredProducts.length &&
+              filteredProducts.length > 0
+            }
+            onChange={handleSelectAll}
+          />
+          <span className="text-sm">전체상품 {filteredProducts.length}개</span>
+        </label>
+        <button
+          className="text-main text-sm hover:underline disabled:text-gray-300"
+          disabled={selected.length === 0}
+        >
+          선택삭제
+        </button>
+        <span className="text-gray-400 text-sm">|</span>
+        <button className="text-main text-sm hover:underline">판매중</button>
+        <button className="text-main text-sm hover:underline">숨김</button>
+        <button className="text-main text-sm hover:underline">품절</button>
+      </div>
 
-        {/* 페이지네이션 */}
-        <div className="px-6 py-4 flex items-center justify-between border-t">
-          <div className="text-sm text-gray-500">
-            총 <span className="font-medium">{filteredProducts.length}</span>개
-            상품
+      {/* 상품 리스트 헤더 */}
+      <div className="w-full border-t border-b border-[#1A3A47] mt-6">
+        <div className="flex items-center h-[48px] bg-white text-[#1A3A47] text-[15px] font-semibold border-b border-[#D9D9D9]">
+          <div className="flex items-center px-4 w-[320px]">
+            <input
+              type="checkbox"
+              checked={
+                selected.length === products.length && products.length > 0
+              }
+              onChange={handleSelectAll}
+              className="w-5 h-5 accent-main mr-2"
+            />
+            전체상품 {products.length}개
+            <span className="ml-3 text-[#B18B6C] font-normal cursor-pointer">
+              선택제품 수정/삭제
+            </span>
           </div>
-          <div className="flex space-x-2">
-            <button className="p-2 rounded-md border hover:bg-gray-50">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button className="px-3 py-1 rounded-md bg-orange-600 text-white">
-              1
-            </button>
-            <button className="px-3 py-1 rounded-md hover:bg-gray-50">2</button>
-            <button className="px-3 py-1 rounded-md hover:bg-gray-50">3</button>
-            <button className="p-2 rounded-md border hover:bg-gray-50">
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          <div className="px-4 flex-1 text-center">상품 판매량</div>
+          <div className="px-4 w-[120px] text-center">판매상태</div>
+          <div className="px-4 w-[120px] text-center">재고수량</div>
         </div>
+        {/* 상품 리스트 */}
+        {products.map((product, idx) => (
+          <div
+            key={product.id}
+            className="flex items-center h-[168px] border-b border-[#E5E5E5] bg-white hover:bg-[#F0F6FA]"
+          >
+            <div className="flex items-center px-4 w-[320px] h-full">
+              <input
+                type="checkbox"
+                checked={selected.includes(product.id)}
+                onChange={() => handleSelect(product.id)}
+                className="w-5 h-5 accent-main mr-4"
+              />
+              <img
+                src={product.thumbnailUrl}
+                alt={product.name}
+                className="w-40 h-40 object-cover rounded-lg mr-4"
+              />
+              <div className="flex flex-col justify-center h-full">
+                <div className="text-[21px] text-main font-pretendard font-extrabold leading-tight truncate max-w-[180px]">
+                  {product.name}
+                </div>
+                <div className="text-xs text-[#888] leading-tight truncate max-w-[180px]">
+                  {product.option || ""}
+                </div>
+                <div
+                  className="text-xs text-main font-pretendard font-light leading-tight"
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  판매가 {product.price}
+                </div>
+              </div>
+            </div>
+            <div className="px-4 flex-1 text-center text-[15px]">
+              {product.salesCount || 0}개<br />
+              <span className="text-xs text-[#B0B8C1]">
+                1주 {product.weeklySales || 0}개
+              </span>
+            </div>
+            <div className="px-4 w-[120px] text-center font-bold text-[15px]">
+              <span
+                className={
+                  product.status === "판매중"
+                    ? "text-[#FF9100]"
+                    : product.status === "숨김"
+                    ? "text-[#B18B6C]"
+                    : "text-[#B0B8C1]"
+                }
+              >
+                {product.status}
+              </span>
+            </div>
+            <div className="px-4 w-[120px] text-center text-[15px]">
+              {product.stock === 0 ? (
+                <span className="text-[#B0B8C1]">재고없음</span>
+              ) : (
+                `재고 ${product.stock}개`
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 페이지네이션 */}
+      <div className="flex justify-center gap-2 my-6">
+        <button
+          onClick={() => setPageNum((prev) => Math.max(1, prev - 1))}
+          disabled={pageNum === 1}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          {"<"}
+        </button>
+        <span className="px-2 py-1">
+          {pageNum} / {totalPages}
+        </span>
+        <button
+          onClick={() => setPageNum((prev) => Math.min(totalPages, prev + 1))}
+          disabled={pageNum === totalPages}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          {">"}
+        </button>
       </div>
     </div>
   );

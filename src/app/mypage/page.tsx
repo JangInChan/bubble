@@ -7,192 +7,212 @@ import { deleteUser, updateUserInfo } from "@/lib/auth";
 import apiClient from "@/lib/api-client";
 import type { User } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth";
+import React from "react";
+import { getOrderHistory } from "@/lib/order";
+import Image from "next/image";
 
 export default function MyPage() {
-  const { user: zustandUser, logout } = useAuth();
-  const setUser = useAuthStore((state) => state.setUser);
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
-  const [user, setUserState] = useState(zustandUser);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    phoneNumber: user?.phoneNumber || "",
-    birthday: user?.birthday || user?.birthDay || "",
-  });
-  const [isSaving, setIsSaving] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 마이페이지 진입 시 사용자 정보 fetch
   useEffect(() => {
-    async function fetchUser() {
+    if (isLoggedIn === false && !redirecting) {
+      setRedirecting(true);
+      router.replace("/login");
+    }
+  }, [isLoggedIn, redirecting, router]);
+
+  useEffect(() => {
+    if (isLoggedIn !== true) return;
+    async function fetchOrders() {
       try {
-        const res = await apiClient.get("/api/users");
-        const fetchedUser = (res.data as any).data as User;
-        setUserState(fetchedUser);
-        setEditForm({
-          name: fetchedUser.name || "",
-          email: fetchedUser.email || "",
-          phoneNumber: fetchedUser.phoneNumber || "",
-          birthday: fetchedUser.birthday || fetchedUser.birthDay || "",
-        });
-      } catch (e) {
-        setUserState(null);
+        setLoading(true);
+        const res = await getOrderHistory();
+        const result = res as any;
+        setOrders(result.data || result);
+      } catch (e: any) {
+        setError(e?.message || "주문 내역을 불러오지 못했습니다.");
+      } finally {
+        setLoading(false);
       }
     }
-    if (!zustandUser) {
-      fetchUser();
-    }
-  }, [zustandUser]);
+    fetchOrders();
+  }, [isLoggedIn]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async () => {
-    if (!user) return;
-    setIsSaving(true);
-    try {
-      const updated = await updateUserInfo({
-        userId: user.id,
-        name: editForm.name,
-        email: editForm.email,
-        phoneNumber: editForm.phoneNumber,
-        birthday: editForm.birthday,
-      });
-      setUserState((updated as any).data);
-      setUser((updated as any).data);
-      setIsEditModalOpen(false);
-      alert("회원 정보가 수정되었습니다.");
-    } catch (e) {
-      alert("회원 정보 수정에 실패했습니다.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!confirm("정말 탈퇴하시겠습니까?")) return;
-    setIsDeleting(true);
-    try {
-      await deleteUser();
-      logout();
-      router.push("/");
-    } catch (error) {
-      console.error("회원 탈퇴 실패:", error);
-      alert("회원 탈퇴에 실패했습니다.");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
-  if (!user) return null;
+  if (typeof isLoggedIn === "undefined") {
+    return <div />;
+  }
+  if (isLoggedIn === false && redirecting) {
+    return <div />;
+  }
+  if (isLoggedIn !== true) {
+    return null;
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">마이페이지</h1>
-      <div className="bg-white p-6 rounded-xl shadow-lg max-w-lg mx-auto">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">회원 정보</h2>
-        <div className="space-y-2 text-gray-700">
+    <div className="flex w-full min-h-[80vh] bg-[#F7F7F7]">
+      {/* 좌측 메뉴 */}
+      <aside className="w-[260px] bg-white border-r border-[#E5E5E5] py-10 px-6 flex-shrink-0">
+        <h2 className="text-xl font-bold mb-10 text-[#222]">마이페이지</h2>
+        <nav className="space-y-8">
           <div>
-            <span className="font-semibold">이름:</span> {user.name}
+            <div className="text-[#222] font-semibold mb-2">MY 쇼핑</div>
+            <ul className="space-y-1 text-[#666] text-sm">
+              <li className="hover:text-main cursor-pointer">
+                주문목록/배송조회
+              </li>
+              <li className="hover:text-main cursor-pointer">
+                취소/반품/교환/환불내역
+              </li>
+            </ul>
           </div>
           <div>
-            <span className="font-semibold">이메일:</span> {user.email}
+            <div className="text-[#222] font-semibold mb-2">MY 활동</div>
+            <ul className="space-y-1 text-[#666] text-sm">
+              <li className="hover:text-main cursor-pointer">Q&A 문의내역</li>
+              <li className="hover:text-main cursor-pointer">리뷰관리</li>
+              <li className="hover:text-main cursor-pointer">찜 리스트</li>
+            </ul>
           </div>
           <div>
-            <span className="font-semibold">전화번호:</span> {user.phoneNumber}
+            <div className="text-[#222] font-semibold mb-2">MY 정보</div>
+            <ul className="space-y-1 text-[#666] text-sm">
+              <li className="hover:text-main cursor-pointer">
+                개인정보 확인/수정
+              </li>
+              <li className="hover:text-main cursor-pointer">배송지 관리</li>
+            </ul>
           </div>
-          <div>
-            <span className="font-semibold">생년월일:</span>{" "}
-            {user.birthday || user.birthDay || ""}
-          </div>
-        </div>
-        <div className="flex gap-2 mt-6">
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors shadow"
-          >
-            수정하기
-          </button>
-          <button
-            onClick={handleDeleteAccount}
-            disabled={isDeleting}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:bg-red-300 transition-colors shadow"
-          >
-            {isDeleting ? "탈퇴 중..." : "회원 탈퇴"}
-          </button>
-        </div>
-      </div>
+        </nav>
+      </aside>
 
-      {/* 수정 모달 */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 animate-fadeIn">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">
-              회원 정보 수정
-            </h3>
-            <div className="space-y-4">
-              <label className="block">
-                <span className="font-semibold">이름</span>
-                <input
-                  type="text"
-                  name="name"
-                  value={editForm.name}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-              </label>
-              <label className="block">
-                <span className="font-semibold">이메일</span>
-                <input
-                  type="email"
-                  name="email"
-                  value={editForm.email}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-              </label>
-              <label className="block">
-                <span className="font-semibold">전화번호</span>
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={editForm.phoneNumber}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-              </label>
-              <label className="block">
-                <span className="font-semibold">생년월일</span>
-                <input
-                  type="date"
-                  name="birthday"
-                  value={editForm.birthday}
-                  onChange={handleChange}
-                  className="mt-1 w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                />
-              </label>
-            </div>
-            <div className="flex justify-end gap-2 mt-6">
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-              >
-                취소
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 transition-colors shadow"
-              >
-                {isSaving ? "저장 중..." : "저장"}
-              </button>
-            </div>
+      {/* 우측 본문 */}
+      <main className="flex-1 py-10 px-12">
+        {/* 주문목록 상단 */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="font-pretendard text-[21px] font-extrabold text-main">
+            주문목록
+          </div>
+          <div className="flex gap-4 text-[#888] text-sm">
+            <button className="hover:text-main">최근 6개월</button>
+            <button className="hover:text-main">2025</button>
+            <button className="hover:text-main">2024</button>
+            <button className="hover:text-main">2023</button>
+            <button className="hover:text-main">2022</button>
+            <button className="hover:text-main">2021</button>
+            <button className="hover:text-main">이전년도 보기</button>
           </div>
         </div>
-      )}
+        {/* 검색창 */}
+        <form
+          className="relative flex items-center w-[328px] h-[38px] mb-6"
+          style={{ maxWidth: 328 }}
+        >
+          {/* 검색창 배경 SVG */}
+          <Image
+            src="/search-bg.svg"
+            alt="검색창 배경"
+            fill
+            className="absolute left-0 top-0 w-full h-full z-0"
+          />
+          <input
+            type="text"
+            placeholder="주문상품 검색"
+            className="pl-4 pr-10 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh text-[18px] text-white placeholder:text-sub-light search-placeholder-fix"
+            style={{
+              background: "transparent",
+              height: "38px",
+              lineHeight: "38px",
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
+          />
+          {/* 돋보기 아이콘 */}
+          <button
+            type="submit"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10"
+          >
+            <Image src="/search-icon.svg" alt="검색" width={22} height={22} />
+          </button>
+        </form>
+        {/* 주문 리스트 */}
+        <div className="space-y-10">
+          {loading && (
+            <div className="text-center py-10 text-gray-400">
+              주문 내역을 불러오는 중...
+            </div>
+          )}
+          {error && (
+            <div className="text-center py-10 text-red-500">{error}</div>
+          )}
+          {!loading && !error && orders.length === 0 && (
+            <div className="text-center py-10 text-gray-400">
+              주문 내역이 없습니다.
+            </div>
+          )}
+          {!loading &&
+            !error &&
+            orders.map((order: any, idx: number) => (
+              <section key={order.id || idx}>
+                <div className="flex items-center justify-between border-b pb-2 mb-4">
+                  <div className="font-semibold text-[#222]">
+                    {order.orderDate ? order.orderDate.split("T")[0] : "-"} 주문
+                  </div>
+                  <button className="text-main text-xs underline">
+                    주문 상세보기
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {order.orderDetails &&
+                    order.orderDetails.map((item: any, i: number) => (
+                      <div
+                        key={item.id || i}
+                        className="flex items-center bg-white rounded-lg shadow p-4"
+                      >
+                        <img
+                          src={item.thumbnailUrl || "/noimg.png"}
+                          alt={item.productName || "상품 이미지"}
+                          className="w-20 h-20 object-cover rounded mr-6 border"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm text-[#222] font-semibold mb-1">
+                            {item.productName}
+                          </div>
+                          <div className="text-xs text-[#888]">
+                            옵션합계가 |{" "}
+                            {item.price ? item.price.toLocaleString() : 0}원
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end min-w-[120px]">
+                          <div className="text-xs text-[#FF9100] font-bold mb-2">
+                            {item.status || "-"}
+                            <span className="text-[#888]">
+                              {item.statusDate || ""}
+                            </span>
+                          </div>
+                          <div className="flex gap-2">
+                            <button className="border border-[#FF9100] text-[#FF9100] rounded px-2 py-1 text-xs">
+                              배송조회
+                            </button>
+                            <button className="border border-[#B18B6C] text-[#B18B6C] rounded px-2 py-1 text-xs">
+                              교환/반품 신청
+                            </button>
+                            <button className="border border-[#0E2E40] text-[#0E2E40] rounded px-2 py-1 text-xs">
+                              리뷰 작성
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </section>
+            ))}
+        </div>
+      </main>
     </div>
   );
 }

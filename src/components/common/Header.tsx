@@ -202,7 +202,14 @@ export default function Header() {
             )}
             <input
               type="text"
-              className="pl-4 pr-10 py-2 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh text-[18px] text-white placeholder:text-sub-light placeholder:translate-y-[2px] search-placeholder-fix"
+              className="pl-4 pr-10 bg-transparent border-none w-full h-full relative z-10 focus:outline-none font-noh text-[18px] text-white placeholder:text-sub-light search-placeholder-fix"
+              style={{
+                background: "transparent",
+                height: "38px",
+                lineHeight: "38px",
+                paddingTop: 0,
+                paddingBottom: 0,
+              }}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="검색어를 입력해 주세요"

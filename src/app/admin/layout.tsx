@@ -82,7 +82,7 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#F7F7F7] font-pretendard">
       {/* 모바일 헤더 */}
       <div className="md:hidden bg-white border-b p-4 flex items-center justify-between">
         <div className="flex items-center">
@@ -102,44 +102,69 @@ export default function AdminLayout({
         <aside
           className={`fixed top-0 left-0 z-40 h-screen transition-transform ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 bg-white border-r w-64 md:sticky md:top-0`}
+          } md:translate-x-0 bg-white border-r border-[#E5E5E5] w-[260px] md:sticky md:top-0`}
         >
           <div className="flex flex-col h-full">
-            <div className="p-5 border-b">
-              <h1 className="text-xl font-bold">기주 관리자</h1>
-              <p className="text-sm text-gray-500">전통주 쇼핑몰 관리</p>
+            {/* 상단 관리자 정보 */}
+            <div className="pt-12 pb-8 px-8 border-b border-[#E5E5E5]">
+              <div className="font-pretendard text-[21px] font-extrabold text-main mb-1">
+                홍길동 관리자
+              </div>
+              <div className="font-pretendard text-[14px] text-sub-dark">
+                전통주 쇼핑몰 관리
+              </div>
             </div>
 
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center px-3 py-2 rounded-md transition-colors ${
-                    pathname === item.href
-                      ? "bg-orange-50 text-orange-600"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {item.icon}
-                  <span className="ml-3">{item.label}</span>
-                </Link>
-              ))}
+            {/* 메뉴 그룹 */}
+            <nav className="flex-1 px-0 py-8 space-y-0">
+              <div className="text-sub-dark text-[14px] font-semibold mb-3 pl-10 tracking-widest">
+                관리 메뉴
+              </div>
+              <ul className="space-y-1">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`flex items-center gap-3 px-10 py-3 rounded-none relative transition-colors text-[21px] font-pretendard
+                          ${
+                            isActive
+                              ? "font-extrabold text-main bg-[#FFF6ED]"
+                              : "font-light text-[#222] hover:bg-[#F7F7F7]"
+                          }
+                        `}
+                        style={
+                          isActive
+                            ? {
+                                borderLeft: "4px solid #FF9100",
+                                background: "#FFF6ED",
+                              }
+                            : { borderLeft: "4px solid transparent" }
+                        }
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </nav>
 
-            <div className="p-4 border-t">
+            {/* 하단: 쇼핑몰로 이동, 로그아웃 */}
+            <div className="px-8 py-8 border-t border-[#E5E5E5] mt-auto">
               <Link
                 href="/"
-                className="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors mb-2"
+                className="block text-[#B18B6C] font-pretendard text-[14px] px-3 text-left font-light mb-4 hover:underline transition-all"
               >
-                <span className="ml-3">쇼핑몰로 이동</span>
+                쇼핑몰로 이동
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors w-full"
+                className="block text-[#888] hover:bg-[#F7F7F7] rounded px-3 py-2 w-full text-left font-pretendard text-[14px] font-light transition-colors"
               >
-                <LogOut className="w-5 h-5" />
-                <span className="ml-3">로그아웃</span>
+                로그아웃
               </button>
             </div>
           </div>
