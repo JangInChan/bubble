@@ -162,7 +162,7 @@ export default function AdminLayout({
               </Link>
               <button
                 onClick={handleLogout}
-                className="block text-[#888] hover:bg-[#F7F7F7] rounded px-3 py-2 w-full text-left font-pretendard text-[14px] font-light transition-colors"
+                className="block text-[#888] hover:underline rounded px-3 py-2 w-full text-left font-pretendard text-[14px] font-light cursor-pointer"
               >
                 로그아웃
               </button>
