@@ -155,16 +155,10 @@ export default function DrinkPage() {
       {/* 상단 네비게이션 */}
       <div className="flex items-center gap-4 mb-6">
         <Link
-          href="/categories"
-          className="text-orange-500 hover:text-orange-600"
-        >
-          ← 카테고리 목록
-        </Link>
-        <Link
           href={`/category/${drink.category.id}`}
-          className="text-orange-500 hover:text-orange-600"
+          className="mr-3 focus:outline-none text-main font-jj font-36pt cursor-pointer"
         >
-          ← {drink.category.name} 목록
+          &lt; {drink.category.name} 목록
         </Link>
       </div>
 
@@ -237,10 +231,15 @@ export default function DrinkPage() {
             </h1>
             <button
               className="flex flex-col items-center border-none bg-transparent cursor-pointer"
-              style={{ color: isWishlisted ? "#FF9100" : "#B18B6C" }}
+              style={{ color: isWishlisted ? "#B18B6C" : "#B18B6C" }}
               onClick={handleWishlist}
             >
-              <Image src="/찜하기.svg" alt="찜하기" width={32} height={32} />
+              <Image
+                src={isWishlisted ? "/찜하기svg.svg" : "/찜하기.svg"}
+                alt="찜하기"
+                width={32}
+                height={32}
+              />
               <span className="font-pretendard font-light mt-1">
                 {isWishlisted ? "찜한 상품" : "찜하기"}
               </span>

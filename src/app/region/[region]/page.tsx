@@ -65,12 +65,12 @@ export default function RegionPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/" className="text-orange-500 hover:text-orange-600">
-          ← 지역 선택
+        <Link
+          href="/"
+          className="font-pretendard text-main font-32pt font-extrabold"
+        >
+          &lt; {regionNameMap[regionStr] || regionStr} 전통주 목록
         </Link>
-        <h1 className="font-pretendard text-main font-32pt font-extrabold">
-          {regionNameMap[regionStr] || regionStr} 전통주 목록
-        </h1>
       </div>
       {drinks.length === 0 ? (
         <div className="text-center text-gray-500 py-8">

@@ -111,7 +111,7 @@ export default function Header() {
                 </Link>
                 <div className="relative" ref={dropdownRef}>
                   <button
-                    className="p-2 hover:text-white rounded-full flex items-center text-sub-light"
+                    className="p-2 hover:text-white rounded-full flex items-center text-sub-light cursor-pointer"
                     onClick={toggleDropdown}
                   >
                     <User className="h-5 w-5" />
