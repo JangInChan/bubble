@@ -82,7 +82,7 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] font-pretendard">
+    <div className="min-h-screen bg-white font-pretendard">
       {/* 모바일 헤더 */}
       <div className="md:hidden bg-white border-b p-4 flex items-center justify-between">
         <div className="flex items-center">
@@ -102,7 +102,7 @@ export default function AdminLayout({
         <aside
           className={`fixed top-0 left-0 z-40 h-screen transition-transform ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 bg-white border-r border-[#E5E5E5] w-[260px] md:sticky md:top-0`}
+          } md:translate-x-0 bg-gray-100 border-r border-[#E5E5E5] w-[260px] md:sticky md:top-0`}
         >
           <div className="flex flex-col h-full">
             {/* 상단 관리자 정보 */}

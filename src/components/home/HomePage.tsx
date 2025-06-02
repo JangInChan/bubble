@@ -39,7 +39,7 @@ export default function HomePage() {
             style={{ borderTop: "0.75px solid #0E2E40" }}
           />
           {/* 타이틀 텍스트 */}
-          <div className="absolute top-[38.71%] left-[14.02%] z-20">
+          <div className="absolute font-pretendard text-[21px] text-main top-[38.71%] left-[14.02%] z-20">
             각 도 주류별 구매뱃지 보유자 랭킹
           </div>
           {/* 왼쪽 장식 - 피그마 기준 최대한 동일하게 조정 */}
