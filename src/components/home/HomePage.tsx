@@ -43,7 +43,7 @@ export default function HomePage() {
             각 도 주류별 구매뱃지 보유자 랭킹
           </div>
           {/* 왼쪽 장식 - 피그마 기준 최대한 동일하게 조정 */}
-          <Image
+          {/* <Image
             className="absolute z-20"
             style={{
               top: "38px",
@@ -55,7 +55,17 @@ export default function HomePage() {
             height={40}
             alt="뱃지 랭킹 타이틀 장식"
             src="/뱃지 랭킹_타이틀.svg"
-          />
+          /> */}
+          <div
+            className="absolute z-20 font-jj font-extrabold text-[28px] text-main"
+            style={{
+              top: "38px",
+              left: "18px",
+              letterSpacing: "0.02em",
+            }}
+          >
+            지역별 랭킹
+          </div>
         </div>
       </section>
 
@@ -125,34 +135,6 @@ export default function HomePage() {
 
       {/* 술 이름/주종 박스 전체 구현 (구분선 제거) */}
       <section className="w-full flex flex-col items-center gap-2 py-2">
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
         {/* 대통대잎술 */}
         <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
           <Image
