@@ -71,7 +71,7 @@ export default function UsersPage() {
   return (
     <div className="w-full flex flex-col items-center bg-white min-h-screen">
       <div className="w-full max-w-[1100px] mt-15">
-        <div className="mb-4">
+        <div className="mb-0">
           <h1 className="text-[21px] font-pretendard font-medium text-main mb-0 text-left">
             회원관리
           </h1>
