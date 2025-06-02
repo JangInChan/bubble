@@ -221,7 +221,9 @@ export default function LoginForm() {
               </button>
               <button
                 type="button"
-                onClick={() => {}}
+                onClick={() => {
+                  window.location.href = "/oauth2/authorization/kakao";
+                }}
                 className="flex-1 h-[44px] bg-[#FEE500] text-[#3C1E1E] font-bold rounded-none flex items-center justify-center text-[15px] hover:bg-[#FDDC3F] transition-colors cursor-pointer"
               >
                 <svg
