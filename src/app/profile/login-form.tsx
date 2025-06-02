@@ -12,6 +12,9 @@ import axios from "axios";
 import SocialLoginButtons from "@/components/common/social-login-buttons";
 import Image from "next/image";
 
+const KAKAO_OAUTH_URL =
+  process.env.NEXT_PUBLIC_API_URL + "/oauth2/authorization/kakao";
+
 export default function LoginForm() {
   const router = useRouter();
   const { login: authLogin } = useAuth();
@@ -222,7 +225,7 @@ export default function LoginForm() {
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "/oauth2/authorization/kakao";
+                  window.location.href = KAKAO_OAUTH_URL;
                 }}
                 className="flex-1 h-[44px] bg-[#FEE500] text-[#3C1E1E] font-bold rounded-none flex items-center justify-center text-[15px] hover:bg-[#FDDC3F] transition-colors cursor-pointer"
               >
