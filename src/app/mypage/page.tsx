@@ -117,60 +117,38 @@ export default function MyPage() {
         )}
         {!loading &&
           !error &&
-          orders.map((order: any, idx: number) => (
-            <section key={order.id || idx}>
-              <div className="flex items-center justify-between border-b pb-2 mb-4">
-                <div className="font-semibold text-[#222]">
-                  {order.orderDate ? order.orderDate.split("T")[0] : "-"} 주문
+          orders.map((order: any) => (
+            <div key={order.orderId} className="border-b py-6">
+              <div className="flex justify-between items-center mb-2">
+                <div className="font-bold text-main">
+                  주문번호 {order.orderId} |{" "}
+                  {order.orderedAt ? order.orderedAt.slice(0, 10) : "-"}{" "}
+                  {order.orderedAt ? order.orderedAt.slice(11, 16) : ""}
                 </div>
-                <button className="text-main text-xs underline">
+                <div className="text-sm text-[#888]">{order.orderStatus}</div>
+              </div>
+              <div className="mb-2 text-sm text-[#444]">
+                결제수단: {order.paymentMethod} | 총 결제금액:{" "}
+                {order.totalAmount?.toLocaleString()}원
+              </div>
+              <ul className="mb-2">
+                {order.items &&
+                  order.items.map((item: any, idx: number) => (
+                    <li key={idx} className="flex justify-between text-[15px]">
+                      <span>
+                        {item.drinkName}{" "}
+                        <span className="text-[#888]">x{item.quantity}</span>
+                      </span>
+                      <span>{item.totalPrice?.toLocaleString()}원</span>
+                    </li>
+                  ))}
+              </ul>
+              <div className="text-right">
+                <button className="text-main underline text-sm">
                   주문 상세보기
                 </button>
               </div>
-              <div className="space-y-4">
-                {order.orderDetails &&
-                  order.orderDetails.map((item: any, i: number) => (
-                    <div
-                      key={item.id || i}
-                      className="flex items-center bg-white rounded-lg shadow p-4"
-                    >
-                      <img
-                        src={item.thumbnailUrl || "/noimg.png"}
-                        alt={item.productName || "상품 이미지"}
-                        className="w-20 h-20 object-cover rounded mr-6 border"
-                      />
-                      <div className="flex-1">
-                        <div className="text-sm text-[#222] font-semibold mb-1">
-                          {item.productName}
-                        </div>
-                        <div className="text-xs text-[#888]">
-                          옵션합계가 |{" "}
-                          {item.price ? item.price.toLocaleString() : 0}원
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end min-w-[120px]">
-                        <div className="text-xs text-[#FF9100] font-bold mb-2">
-                          {item.status || "-"}
-                          <span className="text-[#888]">
-                            {item.statusDate || ""}
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button className="border border-[#FF9100] text-[#FF9100] rounded px-2 py-1 text-xs">
-                            배송조회
-                          </button>
-                          <button className="border border-[#B18B6C] text-[#B18B6C] rounded px-2 py-1 text-xs">
-                            교환/반품 신청
-                          </button>
-                          <button className="border border-[#0E2E40] text-[#0E2E40] rounded px-2 py-1 text-xs">
-                            리뷰 작성
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </section>
+            </div>
           ))}
       </div>
     </main>
