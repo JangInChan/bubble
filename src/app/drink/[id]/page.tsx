@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { getDrink } from "@/lib/drink";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart } from "lucide-react";
 import { addCartItems } from "@/lib/cart";
 import { addWishList, deleteWishList } from "@/lib/wishlist";
+import { getDrinkScores, getDrinkReviews } from "@/lib/reviews";
 
 interface Drink {
   id: number;
@@ -34,6 +34,10 @@ export default function DrinkPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [quantity, setQuantity] = useState("");
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [score, setScore] = useState<number | null>(null);
+  const [reviewCount, setReviewCount] = useState<number>(0);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const reviewSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchDrink() {
@@ -46,6 +50,11 @@ export default function DrinkPage() {
         setDrink(data);
         setSelectedImage(data.thumbnailUrl);
         setIsWishlisted(!!data._like);
+        const scores = await getDrinkScores(drinkId);
+        setScore(Number(scores));
+        const reviewsData = await getDrinkReviews(drinkId);
+        setReviews(Array.isArray(reviewsData) ? reviewsData : []);
+        setReviewCount(Array.isArray(reviewsData) ? reviewsData.length : 0);
       } catch (err) {
         console.error("상품 정보 조회 실패:", err);
         setError(
@@ -246,6 +255,42 @@ export default function DrinkPage() {
             </button>
           </div>
 
+          {/* 별점 및 리뷰 섹션 */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="flex">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Image
+                    key={index}
+                    src={
+                      index < Math.round(Number(score))
+                        ? "/star.svg"
+                        : "/nonestar.svg"
+                    }
+                    alt={index < Math.round(Number(score)) ? "별점" : "빈 별점"}
+                    width={20}
+                    height={20}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-500">
+                ({Number(score).toFixed(1)})
+              </span>
+            </div>
+            <Link
+              href="#"
+              className="text-blue-500 hover:underline"
+              onClick={(e) => {
+                e.preventDefault();
+                reviewSectionRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            >
+              리뷰 {reviewCount}건 보기
+            </Link>
+          </div>
+
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
@@ -397,6 +442,70 @@ export default function DrinkPage() {
               ))
             ) : (
               <span className="text-gray-400">상세페이지</span>
+            )}
+          </div>
+        </div>
+
+        {/* 리뷰 목록 섹션 */}
+        <div ref={reviewSectionRef} className="pt-12">
+          <h2 className="font-pretendard text-[21px] font-semibold text-main mb-6">
+            리뷰({reviewCount})
+          </h2>
+          <div className="space-y-8">
+            {reviews.length === 0 ? (
+              <div className="text-gray-400 text-center">
+                아직 작성된 리뷰가 없습니다.
+              </div>
+            ) : (
+              reviews.map((review, idx) => (
+                <div key={idx} className="border-b pb-8 flex gap-6 items-start">
+                  {/* 별점 */}
+                  <div className="flex flex-col items-center min-w-[80px]">
+                    <div className="flex mb-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Image
+                          key={i}
+                          src={
+                            i < Math.round(Number(review.score))
+                              ? "/star.svg"
+                              : "/nonestar.svg"
+                          }
+                          alt={
+                            i < Math.round(Number(review.score))
+                              ? "별점"
+                              : "빈 별점"
+                          }
+                          width={16}
+                          height={16}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      {Number(review.score).toFixed(1)}
+                    </span>
+                  </div>
+                  {/* 리뷰 내용 */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-sm">
+                        {review.name || review.userId || "익명"}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {review.createdAt ? review.createdAt.slice(0, 10) : ""}
+                      </span>
+                    </div>
+                    <div className="text-base mb-2">{review.content}</div>
+                  </div>
+                  {/* 리뷰 이미지 (있으면) */}
+                  {review.imageUrl && (
+                    <img
+                      src={review.imageUrl}
+                      alt="리뷰 이미지"
+                      className="w-24 h-24 object-cover rounded"
+                    />
+                  )}
+                </div>
+              ))
             )}
           </div>
         </div>

@@ -52,7 +52,7 @@ export default function ProfilePage() {
                 <th className="py-4 px-6 text-left w-[160px] font-medium border-b border-r border-sub-light text-main">
                   배송지
                 </th>
-                <td className="py-0 px-4 border-b border-t border-sub-light h-[140px] align-middle">
+                <td className="py-0 px-6 border-b border-t border-sub-light h-[160px] align-middle">
                   <div className="flex flex-col h-full">
                     {/* 우편번호 줄 */}
                     <div className="flex items-center gap-2 border-b border-[#E5EAF2] flex-1 min-h-0">

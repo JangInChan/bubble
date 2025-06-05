@@ -7,10 +7,13 @@ export default function MyPageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full min-h-[80vh] bg-[#F7F7F7]">
+    <div className="flex w-full min-h-[80vh] bg-white">
       {/* 좌측 메뉴 */}
-      <aside className="w-[260px] bg-white border-r border-[#E5E5E5] py-10 px-6 flex-shrink-0">
-        <h2 className="text-xl font-bold mb-10 text-[#222]">마이페이지</h2>
+      <aside className="w-[260px] bg-gray-100 border-r border-gray-200 py-10 px-6 flex-shrink-0">
+        <h2 className="text-[32px] font-jj font-extrabold mb-4 text-main border-t-4 border-main pt-4">
+          마이페이지
+        </h2>
+        <div className="border-b border-main mb-8"></div>
         <nav className="space-y-8">
           <div>
             <div className="text-[#222] font-semibold mb-2">MY 쇼핑</div>
@@ -37,7 +40,9 @@ export default function MyPageLayout({
               <li className="hover:text-main cursor-pointer">
                 <Link href="/mypage/profile">개인정보 확인/수정</Link>
               </li>
-              <li className="hover:text-main cursor-pointer">배송지 관리</li>
+              <li className="hover:text-main cursor-pointer border-b-4 border-main pb-6">
+                배송지 관리
+              </li>
             </ul>
           </div>
         </nav>
