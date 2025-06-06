@@ -11,21 +11,30 @@ export default function Footer() {
       />
       {/* 개인정보처리방침 | 이용약관 */}
       <div className="absolute" style={{ top: "27.34%", left: "20.31%" }}>
-        개인정보처리방침 | 이용약관
+        <Link href="/privacy" className="hover:underline">
+          개인정보처리방침
+        </Link>
+        {" | "}
+        <Link href="/terms" className="hover:underline">
+          이용약관
+        </Link>
       </div>
       {/* SNS */}
       <div
         className="absolute text-[var(--color-gray)] text-right"
         style={{ top: "27.34%", left: "80.69%" }}
       >
-        SNS | @abcd_kiju
+        SNS |
+        <Link href="https://github.com/Giju-bubble" className="hover:underline">
+          Giju
+        </Link>
       </div>
       {/* 주소 및 카피라이트 */}
       <div
         className="absolute text-[var(--color-gray)]"
         style={{ width: "32.71%", top: "55.45%", left: "20.1%" }}
       >
-        <div>[12345] 광주광역시 00대로 00번길 12-34</div>
+        <div>[61478] 광주 동구 수기동 22-3</div>
         <div className="text-xs mt-2">
           Copyright © 2025 by Domisol and Giju all rights reserved
         </div>
@@ -38,7 +47,7 @@ export default function Footer() {
         className="absolute font-medium text-right"
         style={{ top: "57.23%", left: "76.51%", fontSize: "25.18px" }}
       >
-        062-123-4567
+        bubblegiju@google.com
       </div>
       {/* 로고 SVG */}
       <Image
