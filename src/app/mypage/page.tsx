@@ -3,10 +3,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/common/auth-provider";
-import { deleteUser, updateUserInfo } from "@/lib/auth";
-import apiClient from "@/lib/api-client";
-import type { User } from "@/lib/auth";
-import { useAuthStore } from "@/store/auth";
 import React from "react";
 import { getOrderHistory } from "@/lib/order";
 import Image from "next/image";

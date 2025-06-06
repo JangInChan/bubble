@@ -30,7 +30,9 @@ export default function MyPageLayout({
             <div className="text-[#222] font-semibold mb-2">MY 활동</div>
             <ul className="space-y-1 text-[#666] text-sm">
               <li className="hover:text-main cursor-pointer">Q&A 문의내역</li>
-              <li className="hover:text-main cursor-pointer">리뷰관리</li>
+              <li className="hover:text-main cursor-pointer">
+                <Link href="/mypage/reviews">리뷰관리</Link>
+              </li>
               <li className="hover:text-main cursor-pointer">찜 리스트</li>
             </ul>
           </div>
