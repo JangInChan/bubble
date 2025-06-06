@@ -18,10 +18,10 @@ export default function OAuthSuccessPage() {
           }
         );
         const data = await response.json();
-        if (data.accessToken && data.refreshToken) {
-          useAuthStore
-            .getState()
-            .setTokens(data.accessToken, data.refreshToken);
+        const accessToken = data?.data?.access;
+        const refreshToken = data?.data?.refresh;
+        if (accessToken && refreshToken) {
+          useAuthStore.getState().setTokens(accessToken, refreshToken);
           router.replace("/");
         } else {
           alert("로그인에 실패했습니다.");
