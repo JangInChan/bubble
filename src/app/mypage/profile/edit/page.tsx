@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { updateUser } from "@/lib/user";
 
 export default function ProfileEditPage() {
-  const { user, isLoggedIn, isLoading } = useAuth();
+  const { user, isLoggedIn, isLoading, login: refreshAuth } = useAuth();
   const router = useRouter();
   
   const [formData, setFormData] = useState({
@@ -109,7 +109,16 @@ export default function ProfileEditPage() {
         birthday: formData.birthday.replace(/-/g, "") // YYYY-MM-DD를 YYYYMMDD로 변환
       });
 
-      alert("프로필이 성공적으로 수정되었습니다.");
+      // 사용자 정보 갱신 시도
+      try {
+        await refreshAuth();
+        alert("프로필이 성공적으로 수정되었습니다.");
+      } catch (authError) {
+        // 인증 갱신 실패 시에도 성공 메시지 표시
+        console.log("Auth refresh failed, but update was successful");
+        alert("프로필이 성공적으로 수정되었습니다. 페이지를 새로고침하면 변경사항을 확인할 수 있습니다.");
+      }
+      
       router.push("/mypage/profile");
     } catch (error: any) {
       console.error("프로필 수정 오류:", error);
