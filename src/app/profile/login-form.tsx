@@ -60,28 +60,20 @@ export default function LoginForm() {
 
     try {
       const response = await login(formData);
-      console.log("로그인 응답 전체:", response);
-      console.log("message:", response.message);
-      console.log("accessToken:", response.accessToken);
-      console.log("refreshToken:", response.refreshToken);
       if (
         response.message === "로그인 성공" &&
         response.accessToken &&
         response.refreshToken
       ) {
         setTokens(response.accessToken, response.refreshToken);
-        console.log("토큰값", response.accessToken);
-        console.log("로그인 후 토큰 저장, 유저 정보 요청 시작");
         try {
           const userResponse = await apiClient.get("/users", {
             headers: {
               access: response.accessToken,
             },
           });
-          console.log("유저 정보 요청 결과:", userResponse);
           if ((userResponse as any).data) {
             setUser((userResponse as any).data.data);
-            console.log("setUser 실행, user:", (userResponse as any).data.data);
           }
         } catch (e) {
           console.log("유저 정보 요청 실패:", e);
@@ -91,12 +83,6 @@ export default function LoginForm() {
         alert(response.message || "로그인에 실패했습니다.");
       }
     } catch (error: any) {
-      console.log("로그인 오류 상세:", {
-        error: error,
-        message: error?.message,
-        status: error?.status,
-        timeStamp: error?.timeStamp,
-      });
       const errorMessage =
         error?.message || "로그인에 실패했습니다. 다시 시도해주세요.";
       alert(errorMessage);

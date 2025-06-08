@@ -116,9 +116,11 @@ export default function ProfileEditPage() {
       } catch (authError) {
         // 인증 갱신 실패 시에도 성공 메시지 표시
         console.log("Auth refresh failed, but update was successful");
-        alert("프로필이 성공적으로 수정되었습니다. 페이지를 새로고침하면 변경사항을 확인할 수 있습니다.");
+        alert(
+          "프로필이 성공적으로 수정되었습니다. 페이지를 새로고침하면 변경사항을 확인할 수 있습니다."
+        );
       }
-      
+
       router.push("/mypage/profile");
     } catch (error: any) {
       console.error("프로필 수정 오류:", error);

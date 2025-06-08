@@ -39,21 +39,13 @@ export default function CategoryDetailPage() {
           throw new Error("유효하지 않은 카테고리 ID입니다.");
         }
 
-        console.log("검색 파라미터:", {
-          type: "category",
-          keyword: categoryId.toString(),
-        });
-
         const response = (await searchDrinks({
           type: "category",
           keyword: categoryId.toString(),
         })) as DrinkSearchResponse;
 
-        console.log("API 응답:", response);
-
         setDrinks(response.content);
       } catch (err) {
-        console.error("API 에러:", err);
         setError(
           err instanceof Error
             ? err.message

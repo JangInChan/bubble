@@ -4,7 +4,6 @@ import type { NextRequest } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log("로그인 요청 데이터:", body);
 
     const response = await fetch(`/auth/login`, {
       method: "POST",
@@ -17,8 +16,6 @@ export async function POST(request: NextRequest) {
     try {
       data = JSON.parse(responseText);
     } catch (error) {
-      console.error("JSON 파싱 실패:", error);
-      console.error("응답 본문:", responseText);
       return NextResponse.json(
         { message: "서버 응답을 처리할 수 없습니다." },
         { status: 500 }
@@ -43,7 +40,6 @@ export async function POST(request: NextRequest) {
       refreshToken: data.refreshToken,
     });
   } catch (error) {
-    console.error("로그인 처리 중 오류 발생:", error);
     return NextResponse.json(
       { message: "로그인 처리 중 오류가 발생했습니다." },
       { status: 500 }

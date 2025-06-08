@@ -82,10 +82,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     init();
   }, [accessToken, hydrated]);
 
-  useEffect(() => {
-    console.log("[auth-provider] user 상태 변경:", user);
-  }, [user]);
-
   const login = async () => {
     const userInfo = await fetchUserInfo();
     setUser(userInfo);

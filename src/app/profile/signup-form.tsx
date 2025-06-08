@@ -133,7 +133,7 @@ export default function RegisterPage() {
   // 소셜 회원가입 처리 (실제로는 각 플랫폼 API 연동 필요)
   // const handleSocialRegister = (provider: string) => {
   //   // 실제 구현에서는 각 소셜 로그인 API로 리다이렉트
-  //   console.log(`${provider} 회원가입 시도`);
+  //   //   console.log(`${provider} 회원가입 시도`);
 
   //   // 테스트용: 소셜 회원가입 성공 가정
   //   if (provider === "kakao") {

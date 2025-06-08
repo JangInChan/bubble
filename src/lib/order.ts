@@ -24,7 +24,6 @@ export async function createOrder(
   cartItemIds: number[]
 ): Promise<OrderResponse> {
   try {
-    console.log("[Order] 주문 생성 시작", { cartItemIds });
     const response = await apiClient.post<{
       success: boolean;
       message: string;
@@ -34,25 +33,8 @@ export async function createOrder(
     }>("/order", {
       cartItemIds,
     });
-    console.log("[Order] 주문 생성 완료", response.data);
     return response.data.data;
   } catch (error: any) {
-    console.error("[Order] 주문 생성 실패:", {
-      error,
-      response: error.response?.data,
-      status: error.response?.status,
-      headers: error.response?.headers,
-      request: {
-        url: error.config?.url,
-        method: error.config?.method,
-        data: error.config?.data,
-        headers: error.config?.headers,
-      },
-      errorMessage: error.message,
-      errorCode: error.code,
-      errorName: error.name,
-      stack: error.stack,
-    });
     throw error;
   }
 }
