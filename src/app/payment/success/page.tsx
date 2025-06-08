@@ -25,11 +25,23 @@ export default function PaymentSuccessPage() {
           amount,
         });
 
+        console.log("[TOSS][DEBUG] 결제 성공 파라미터", {
+          paymentKey,
+          orderId,
+          amount,
+        });
+
         if (!paymentKey || !orderId || !amount) {
           throw new Error("필수 결제 정보가 누락되었습니다.");
         }
 
         console.log("[TOSS] paymentSuccess 호출 시작", {
+          paymentKey,
+          orderId,
+          amount,
+        });
+
+        console.log("[TOSS][DEBUG] paymentSuccess 호출 직전", {
           paymentKey,
           orderId,
           amount,
@@ -40,6 +52,14 @@ export default function PaymentSuccessPage() {
       } catch (error) {
         console.error("결제 처리 중 오류 발생:", error);
         const err = error as any;
+        console.error("[TOSS][DEBUG] 결제 실패 상세", {
+          paymentKey: searchParams.get("paymentKey"),
+          orderId: searchParams.get("orderId"),
+          amount: searchParams.get("amount"),
+          error: err,
+          response: err?.response,
+          responseData: err?.response?.data,
+        });
         if (err?.response?.data) {
           console.error("백엔드 응답:", err.response.data);
         }
