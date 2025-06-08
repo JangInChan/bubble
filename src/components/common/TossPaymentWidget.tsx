@@ -72,8 +72,8 @@ export default function TossPaymentWidget({
       className="flex flex-col items-center justify-center"
       style={{
         width: "100%",
-        minWidth: 340,
-        maxWidth: 420,
+        minWidth: 620,
+        maxWidth: 720,
         margin: "0 auto",
         background: "#fff",
         borderRadius: 18,
