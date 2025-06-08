@@ -68,9 +68,24 @@ export default function TossPaymentWidget({
   };
 
   return (
-    <div>
-      <div id="payment-method" />
-      <div id="agreement" />
+    <div
+      className="flex flex-col items-center justify-center"
+      style={{
+        width: "100%",
+        minWidth: 340,
+        maxWidth: 420,
+        margin: "0 auto",
+        background: "#fff",
+        borderRadius: 18,
+        boxShadow: "0 4px 24px 0 rgba(0,0,0,0.08)",
+        padding: 32,
+      }}
+    >
+      <div
+        id="payment-method"
+        style={{ width: "100%", minHeight: 320, marginBottom: 16 }}
+      />
+      <div id="agreement" style={{ width: "100%", marginBottom: 12 }} />
       {errorMessage && (
         <div className="text-red-500 text-center my-2 text-sm">
           {errorMessage}
@@ -79,7 +94,7 @@ export default function TossPaymentWidget({
       <button
         onClick={handlePayment}
         disabled={!widgetLoaded}
-        className="w-[140px] h-[68px] mt-6 text-white rounded flex items-center justify-center hover:opacity-90 transition"
+        className="w-[180px] h-[56px] mt-4 text-white rounded flex items-center justify-center hover:opacity-90 transition text-lg font-bold"
         style={{
           backgroundImage: "url('/cart-button.svg')",
           backgroundSize: "100% 100%",
