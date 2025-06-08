@@ -153,7 +153,7 @@ export default function HomePage() {
             <button
               key={region}
               onClick={() => setSelectedRegion(region)}
-              className="relative flex items-center justify-center w-full h-[52px] max-w-[322px] mx-auto group"
+              className="relative flex items-center justify-center w-full h-[52px] max-w-[322px] mx-auto group cursor-pointer"
               style={{ background: "none", border: "none", padding: 0 }}
             >
               <img
