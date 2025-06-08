@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getDrink } from "@/lib/drink";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,6 +27,7 @@ interface Drink {
 
 export default function DrinkPage() {
   const params = useParams();
+  const router = useRouter();
   const [drink, setDrink] = useState<Drink | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -153,9 +154,19 @@ export default function DrinkPage() {
     }
   };
 
-  const handleBuyNow = () => {
-    // TODO: 구매 페이지로 이동 또는 모달 표시
-    alert("구매 페이지로 이동합니다.");
+  const handleBuyNow = async () => {
+    if (!drink || !quantity) {
+      alert("수량을 선택해주세요.");
+      return;
+    }
+
+    try {
+      // 장바구니에 추가 후 바로 장바구니 페이지로 이동
+      await addCartItems(drink.id, Number(quantity));
+      router.push("/cart");
+    } catch (e) {
+      alert("구매 처리 중 오류가 발생했습니다.");
+    }
   };
 
   if (loading) {
