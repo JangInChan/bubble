@@ -11,7 +11,7 @@ export default function MyPageLayout({
       {/* 좌측 메뉴 */}
       <aside className="w-[260px] bg-gray-100 border-r border-gray-200 py-10 px-6 flex-shrink-0">
         <h2 className="text-[32px] font-jj font-extrabold mb-4 text-main border-t-4 border-main pt-4">
-          마이페이지
+          <Link href="/mypage">마이페이지</Link>
         </h2>
         <div className="border-b border-main mb-8"></div>
         <nav className="space-y-8">
@@ -19,7 +19,7 @@ export default function MyPageLayout({
             <div className="text-[#222] font-semibold mb-2">MY 쇼핑</div>
             <ul className="space-y-1 text-[#666] text-sm">
               <li className="hover:text-main cursor-pointer">
-                주문목록/배송조회
+                <Link href="/mypage">주문목록/배송조회</Link>
               </li>
               <li className="hover:text-main cursor-pointer">
                 취소/반품/교환/환불내역

@@ -638,7 +638,6 @@ export default function CartPage() {
           >
             &lt; 장바구니
           </button>
-          {/* <span className="jj-title">장바구니</span> */}
         </div>
 
         {cartItems.length === 0 ? (
@@ -655,160 +654,166 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item.cartId}
-                  className="rounded-lg border bg-white p-4 flex items-center"
-                >
-                  <div className="flex-shrink-0 mr-4">
-                    <Image
-                      src={item.imageUrl || "/images/placeholder.png"}
-                      alt={item.drinkName}
-                      width={80}
-                      height={80}
-                      className="rounded-md object-cover"
-                    />
+          <div className="w-full max-w-[1300px] mx-auto">
+            {/* 테이블형 장바구니 */}
+            <table className="w-full text-center border-t-2 border-main">
+              <thead>
+                <tr className="bg-white font-bold text-main text-lg">
+                  <th className="border-r border-sub-light py-3">선택</th>
+                  <th className="border-r border-sub-light">상품정보</th>
+                  <th className="border-r border-sub-light">주문금액</th>
+                  <th className="border-r border-sub-light">배송비</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartItems.map((item) => (
+                  <tr
+                    key={item.cartId}
+                    className="border-t border-sub-light bg-white align-middle"
+                  >
+                    <td className="border-r border-sub-light align-middle">
+                      <input
+                        type="checkbox"
+                        checked
+                        readOnly
+                        className="w-5 h-5"
+                      />
+                    </td>
+                    <td className="border-r border-sub-light align-middle">
+                      <div className="flex items-center gap-4 px-4 py-2">
+                        <Image
+                          src={item.imageUrl || "/images/placeholder.png"}
+                          alt={item.drinkName}
+                          width={180}
+                          height={180}
+                          className="rounded-md object-cover border"
+                        />
+                        <div className="text-left">
+                          <div className="font-semibold text-base">
+                            {item.drinkName}
+                          </div>
+                          <div className="text-gray-400 text-xs mt-1">
+                            {item.unitPrice.toLocaleString()}원
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="border-r border-sub-light align-middle">
+                      <div className="font-bold text-lg mb-2">
+                        {(item.unitPrice * item.quantity).toLocaleString()}원
+                      </div>
+                      <div className="flex items-center gap-1 justify-center">
+                        <button
+                          className="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
+                          onClick={() =>
+                            decreaseQuantity(item.cartId, item.quantity)
+                          }
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus className="h-4 w-4 cursor-pointer" />
+                        </button>
+                        <span className="w-8 text-center">{item.quantity}</span>
+                        <button
+                          className="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-100"
+                          onClick={() =>
+                            increaseQuantity(item.cartId, item.quantity)
+                          }
+                        >
+                          <Plus className="h-4 w-4 cursor-pointer" />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="border-r border-sub-light align-middle font-medium">
+                      {buyInfo && buyInfo.deliveryCharge === 0
+                        ? "무료"
+                        : `${shippingFee.toLocaleString()}원`}
+                    </td>
+                    <td className="align-middle text-center">
+                      <button
+                        className="text-red-500 hover:text-red-700 text-sm flex items-center mx-auto cursor-pointer"
+                        onClick={() => removeItem(item.cartId)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" /> 삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="border-t border-main"></div>
+            {/* 배송지 요약/선택 영역 */}
+            <div className="mt-8 max-w-[1300px] mx-auto">
+              <AddressSummary
+                address={address}
+                onChange={() => setShowModal(true)}
+              />
+              {showModal && (
+                <AddressListModal
+                  addresses={addresses}
+                  selectedId={address?.addressId ?? null}
+                  onSelect={(addr) => {
+                    setAddress(addr);
+                    setShowModal(false);
+                  }}
+                  onEdit={handleEditAddress}
+                  onAdd={handleAddAddress}
+                  onDelete={handleDeleteAddress}
+                  onClose={() => setShowModal(false)}
+                />
+              )}
+            </div>
+            {/* 하단 요약 영역 */}
+            <div className="w-full bg-white border-t-2 border-main mt-8">
+              <div className="grid grid-cols-3 text-center py-6 text-xl font-bold">
+                <div>
+                  <div className="text-gray-500 text-base font-normal mb-1">
+                    주문금액
                   </div>
-                  <div className="flex-grow">
-                    <h3 className="font-medium">{item.drinkName}</h3>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {item.unitPrice.toLocaleString()}원
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      className="h-8 w-8 border rounded flex items-center justify-center hover:bg-gray-100 disabled:opacity-50"
-                      onClick={() =>
-                        decreaseQuantity(item.cartId, item.quantity)
-                      }
-                      disabled={item.quantity <= 1}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-8 text-center">{item.quantity}</span>
-                    <button
-                      className="h-8 w-8 border rounded flex items-center justify-center hover:bg-gray-100"
-                      onClick={() =>
-                        increaseQuantity(item.cartId, item.quantity)
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <div className="ml-4 text-right min-w-[100px]">
-                    <div className="font-medium">
-                      {(item.unitPrice * item.quantity).toLocaleString()}원
-                    </div>
-                    <button
-                      className="text-red-500 hover:text-red-700 mt-1 text-sm flex items-center"
-                      onClick={() => removeItem(item.cartId)}
-                    >
-                      <Trash2 className="h-4 w-4 mr-1" />
-                      삭제
-                    </button>
+                  <div className="text-main text-2xl">
+                    {buyInfo ? buyInfo.totalPrice.toLocaleString() : 0}원
                   </div>
                 </div>
-              ))}
-              <div className="mt-6 flex justify-start">
-                <Link
-                  href="/"
-                  className="w-[100px] h-[42px] flex items-center justify-center text-[#0E2E40] font-medium text-sm"
-                  style={{
-                    backgroundImage: "url('/white-button.svg')",
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    border: "none",
-                  }}
-                >
-                  쇼핑 계속하기
-                </Link>
+                <div>
+                  <div className="text-gray-500 text-base font-normal mb-1">
+                    배송비
+                  </div>
+                  <div className="text-main text-2xl">
+                    {buyInfo
+                      ? buyInfo.deliveryCharge === 0
+                        ? "무료"
+                        : `${buyInfo.deliveryCharge.toLocaleString()}원`
+                      : "무료"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-gray-500 text-base font-normal mb-1">
+                    총 결제 금액
+                  </div>
+                  <div className="text-main text-2xl">
+                    {buyInfo
+                      ? buyInfo.totalPriceWithDelivery.toLocaleString()
+                      : 0}
+                    원
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div>
-              <div className="rounded-lg border p-6">
-                <h2 className="text-xl font-bold mb-4">주문 요약</h2>
-
-                {/* 배송지 섹션 */}
-                <div className="mb-4">
-                  <AddressSummary
-                    address={(() => {
-                      console.log("AddressSummary address:", address);
-                      return address;
-                    })()}
-                    onChange={() => setShowModal(true)}
-                  />
-                </div>
-                {showModal && (
-                  <AddressListModal
-                    addresses={addresses}
-                    selectedId={address?.addressId || null}
-                    onSelect={(addr) => {
-                      setAddress(addr);
-                      setShowModal(false);
-                    }}
-                    onEdit={handleEditAddress}
-                    onAdd={handleAddAddress}
-                    onDelete={handleDeleteAddress}
-                    onClose={() => setShowModal(false)}
-                  />
-                )}
-
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">상품 금액</span>
-                    <span>
-                      {buyInfo ? buyInfo.totalPrice.toLocaleString() : 0}원
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">배송비</span>
-                    <span>
-                      {buyInfo
-                        ? buyInfo.deliveryCharge === 0
-                          ? "무료"
-                          : `${buyInfo.deliveryCharge.toLocaleString()}원`
-                        : "무료"}
-                    </span>
-                  </div>
-                  <hr className="border-gray-200 my-2" />
-                  <div className="flex justify-between font-bold">
-                    <span>총 결제 금액</span>
-                    <span>
-                      {buyInfo
-                        ? buyInfo.totalPriceWithDelivery.toLocaleString()
-                        : 0}
-                      원
-                    </span>
-                  </div>
-                </div>
-                <div className="flex justify-center">
-                  {/* 기존 결제 버튼 대신 아래 위젯 렌더링 */}
-                  {orderInfo ? (
-                    <TossPaymentWidget
-                      amount={amountForWidget}
-                      orderInfo={orderInfo}
-                    />
-                  ) : (
-                    <button
-                      className="w-[140px] h-[68px] mt-6 text-white rounded flex items-center justify-center hover:opacity-90 transition"
-                      style={{
-                        backgroundImage: "url('/cart-button.svg')",
-                        backgroundSize: "100% 100%",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        border: "none",
-                      }}
-                      onClick={handlePrepareOrder}
-                    >
-                      구매하기
-                    </button>
-                  )}
-                </div>
-              </div>
+            {/* 구매하기 버튼 */}
+            <div className="flex justify-center mt-8">
+              <button
+                className="w-[240px] h-[56px] text-white text-xl font-bold rounded flex items-center justify-center hover:opacity-90 transition"
+                style={{
+                  backgroundImage: "url('/cart-button.svg')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  border: "none",
+                }}
+                onClick={handlePrepareOrder}
+              >
+                구매하기
+              </button>
             </div>
           </div>
         )}
