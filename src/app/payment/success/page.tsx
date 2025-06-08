@@ -110,7 +110,7 @@ export default function PaymentSuccessPage() {
         </p>
         <div className="space-x-4">
           <Link
-            href="/orders"
+            href="/mypage"
             className="inline-block bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600"
           >
             주문내역 보기
