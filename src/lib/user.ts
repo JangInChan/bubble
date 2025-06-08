@@ -14,3 +14,19 @@ export async function getUsers(page: number, size: number) {
   );
   return response.data;
 }
+
+/**
+ * 사용자 정보 수정
+ * @param userData 수정할 사용자 정보
+ * @returns {Promise<any>} 수정 결과
+ */
+export async function updateUser(userData: {
+  userId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  birthday: string;
+}) {
+  const response = await apiClient.patch("/users", userData);
+  return response.data;
+}

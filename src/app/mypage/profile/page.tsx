@@ -21,6 +21,25 @@ export default function ProfilePage() {
     birth = `${y}-${m}-${d}`;
   }
 
+  // 전화번호 포맷팅 함수 (표시용)
+  const formatPhoneNumber = (phoneNumber: string) => {
+    if (!phoneNumber) return "-";
+    
+    // 숫자만 추출
+    const numbers = phoneNumber.replace(/\D/g, "");
+    
+    // 010-1234-5678 형태로 포맷팅
+    if (numbers.length === 11) {
+      return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+    }
+    // 기타 경우는 원본 반환
+    return phoneNumber;
+  };
+
+  const handleEditClick = () => {
+    router.push("/mypage/profile/edit"); // 수정 페이지로 이동
+  };
+
   return (
     <div className="w-full flex flex-col items-center min-h-screen">
       <div className="w-full max-w-[1000px]">
@@ -28,9 +47,12 @@ export default function ProfilePage() {
           <h1 className="font-jj text-[36px] font-extrabold text-main">
             기본정보
           </h1>
-          {/* <span className="text-[13px] text-[#B18B6C]">
-            * 표시는 필수 입력항목
-          </span> */}
+          <button
+            onClick={handleEditClick}
+            className="px-6 py-2 bg-main text-white rounded hover:bg-opacity-90 transition-colors"
+          >
+            수정하기
+          </button>
         </div>
         <div className="border-b-4 border-main"></div>
         <div className="bg-white overflow-hidden">
@@ -42,32 +64,11 @@ export default function ProfilePage() {
                 </th>
                 <td className="py-4 px-6">{userData.loginId || "-"}</td>
               </tr>
-              <tr>
-                <th className="py-4 px-6 text-left w-[160px] font-medium border-r border-b border-sub-light text-main">
+              <tr className="border-b border-[#E5EAF2]">
+                <th className="py-4 px-6 text-left w-[160px] font-medium border-r border-[#E5EAF2] text-main">
                   이름
                 </th>
                 <td className="py-4 px-6">{userData.name || "-"}</td>
-              </tr>
-              <tr>
-                <th className="py-4 px-6 text-left w-[160px] font-medium border-b border-r border-sub-light text-main">
-                  배송지
-                </th>
-                <td className="py-0 px-6 border-b border-t border-sub-light h-[160px] align-middle">
-                  <div className="flex flex-col h-full">
-                    {/* 우편번호 줄 */}
-                    <div className="flex items-center gap-2 border-b border-[#E5EAF2] flex-1 min-h-0">
-                      <span className="font-medium text-main">12345</span>
-                    </div>
-                    {/* 주소 줄 */}
-                    <div className="flex items-center border-b border-[#E5EAF2] text-[#22313F] flex-1 min-h-0">
-                      광주광역시 00구 00로 00번길 12-34
-                    </div>
-                    {/* 상세주소 줄 */}
-                    <div className="flex items-center text-[#B0B8C1] flex-1 min-h-0">
-                      상세주소 입력
-                    </div>
-                  </div>
-                </td>
               </tr>
               <tr className="border-b border-[#E5EAF2]">
                 <th className="py-4 px-6 text-left w-[160px] font-medium text-main border-r border-[#E5EAF2]">
@@ -79,7 +80,7 @@ export default function ProfilePage() {
                 <th className="py-4 px-6 text-left w-[160px] font-medium text-main border-r border-[#E5EAF2]">
                   일반전화
                 </th>
-                <td className="py-4 px-6">{userData.phoneNumber || "-"}</td>
+                <td className="py-4 px-6">{formatPhoneNumber(userData.phoneNumber)}</td>
               </tr>
               <tr className="border-b-3 border-sub-dark">
                 <th className="py-4 px-6 text-left w-[160px] font-medium text-main border-r border-[#E5EAF2]">
