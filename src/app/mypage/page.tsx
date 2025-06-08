@@ -150,7 +150,11 @@ export default function MyPage() {
                           <button
                             className="text-main underline text-sm hover:text-orange-600"
                             onClick={() => {
-                              window.location.href = `/mypage/review/write?orderId=${order.orderId}&drinkId=${item.drinkName}`;
+                              window.location.href = `/mypage/review/write?orderId=${
+                                order.orderId
+                              }&drinkName=${encodeURIComponent(
+                                item.drinkName
+                              )}`;
                             }}
                           >
                             리뷰쓰기
