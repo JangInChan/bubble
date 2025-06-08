@@ -18,7 +18,7 @@ export default function ProfileEditPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (user?.data) {
+    if ((user as any)?.data) {
       const userData = (user as any).data;
       setFormData({
         name: userData.name || "",
