@@ -2,8 +2,64 @@
 
 import KoreaMap from "../map/KoreaMap";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { getRankings } from "@/lib/rankings";
+
+type RankingResponse = {
+  region: string;
+  ranking: { name: string; totalQuantity: number }[];
+};
 
 export default function HomePage() {
+  const regions = [
+    "경기도",
+    "강원도",
+    "충청북도",
+    "충청남도",
+    "전라북도",
+    "전라남도",
+    "경상북도",
+    "경상남도",
+    "제주도",
+  ];
+  const regionCodeMap: Record<string, string> = {
+    경기도: "gyeonggi",
+    강원도: "gangwon",
+    충청북도: "chungbuk",
+    충청남도: "chungnam",
+    전라북도: "jeonbuk",
+    전라남도: "jeonnam",
+    경상북도: "gyeongbuk",
+    경상남도: "gyeongnam",
+    제주도: "jeju",
+  };
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [ranking, setRanking] = useState<
+    { name: string; totalQuantity: number }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchRanking() {
+      if (!selectedRegion) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const code = regionCodeMap[selectedRegion];
+        if (!code) throw new Error("지역 코드가 없습니다.");
+        const data = (await getRankings(code)) as RankingResponse;
+        setRanking(data.ranking);
+      } catch (e: any) {
+        setError(e.message || "랭킹을 불러오지 못했습니다.");
+        setRanking([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRanking();
+  }, [selectedRegion]);
+
   return (
     <div
       className="w-full min-h-screen bg-cover bg-center bg-no-repeat"
@@ -17,7 +73,7 @@ export default function HomePage() {
       </section>
 
       {/* 뱃지 랭킹 상단 타이틀 영역 */}
-      <section className="w-full flex justify-center py-8">
+      <section className="w-full flex justify-center py-14">
         <div className="w-full max-w-[1200px] relative h-[107px] text-left text-[21px] text-darkslategray font-inter">
           {/* 블러 배경: 중앙 콘텐츠만 덮도록 */}
           {/* <div className="absolute left-[18%] top-0 w-[64%] h-full z-0">
@@ -30,16 +86,16 @@ export default function HomePage() {
           </div> */}
           {/* 상단 구분선 (5px) */}
           <div
-            className="absolute top-0 left-0 w-full z-10"
+            className="absolute top-45 left-0 w-full z-10"
             style={{ borderTop: "5px solid #0E2E40" }}
           />
           {/* 하단 구분선 (0.75px) */}
           <div
-            className="absolute bottom-0 left-0 w-full z-10"
+            className="absolute top-75 bottom-0 left-0 w-full z-10"
             style={{ borderTop: "0.75px solid #0E2E40" }}
           />
           {/* 타이틀 텍스트 */}
-          <div className="absolute font-pretendard text-[21px] text-main top-[38.71%] left-[14.02%] z-20">
+          <div className="absolute font-pretendard text-[21px] text-main top-[211.71%] left-[14.02%] z-20">
             각 도 주류별 구매뱃지 보유자 랭킹
           </div>
           {/* 왼쪽 장식 - 피그마 기준 최대한 동일하게 조정 */}
@@ -59,7 +115,7 @@ export default function HomePage() {
           <div
             className="absolute z-20 font-jj font-extrabold text-[28px] text-main"
             style={{
-              top: "38px",
+              top: "222px",
               left: "18px",
               letterSpacing: "0.02em",
             }}
@@ -69,261 +125,85 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 뱃지 랭킹 지도 영역
-      <section className="w-full flex justify-center py-8">
-        <div className="w-full max-w-[1200px] relative h-[513.1px]">
+      {/* 지역별 랭킹 + 지도 flex 배치 */}
+      {/* <section className="w-full flex justify-center py-8 relative min-h-[900px]">
+        <div className="w-full max-w-[1200px] flex flex-row items-start">
+          <div className="flex-1"></div>
           <Image
+            src="/images/korea-map-2.svg"
+            alt="한국 지도"
+            width={420}
+            height={1020}
             className="absolute"
             style={{
-              top: "0%",
-              left: "0%",
-              width: "90.77%",
-              height: "100%",
-              right: "9.23%",
-              maxWidth: "100%",
-              maxHeight: "100%",
+              right: "40px",
+              bottom: "90px",
+              width: "420px",
+              height: "auto",
+              zIndex: 10,
             }}
-            src="/map.svg"
-            alt="지도"
-            width={1061}
-            height={513}
-          />
-        </div>
-      </section>
-
-      {/* 전라남도 SVG 영역 
-      <section className="w-full flex justify-center py-8">
-        <div className="w-full max-w-[1200px] relative h-[134px]">
-          <Image
-            className="absolute"
-            style={{
-              top: "0%",
-              left: "0%",
-              width: "100%",
-              height: "100%",
-              maxWidth: "100%",
-              maxHeight: "100%",
-            }}
-            src="/전라남도.svg"
-            alt="전라남도"
-            width={400}
-            height={134}
-          />
-        </div>
-      </section>
-
-      {/* 지역명 SVG 영역 *
-      <section className="w-full flex justify-center py-4">
-        <div className="w-full max-w-[1200px] relative h-[29.8px]">
-          <Image
-            className="absolute"
-            style={{
-              top: "0%",
-              left: "0%",
-              width: "100%",
-              height: "100%",
-              maxWidth: "100%",
-              maxHeight: "100%",
-            }}
-            src="/지역명.svg"
-            alt="전라남도 지역명"
-            width={200}
-            height={29.8}
           />
         </div>
       </section> */}
 
-      {/* 술 이름/주종 박스 전체 구현 (구분선 제거) */}
-      <section className="w-full flex flex-col items-center gap-2 py-2">
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
+      <section className="w-full flex flex-col items-center justify-center pt-40 pb-16">
+        {/* 3x3 지역 버튼 그리드 - 더 넓게, 더 위로 */}
+        <div className="grid grid-cols-3 gap-x-8 gap-y-8 w-full mb-10 max-w-[1200px] mx-auto">
+          {regions.map((region) => (
+            <button
+              key={region}
+              onClick={() => setSelectedRegion(region)}
+              className="relative flex items-center justify-center w-full h-[52px] max-w-[322px] mx-auto group"
+              style={{ background: "none", border: "none", padding: 0 }}
+            >
+              <img
+                src="/buy.svg"
+                alt="지역 버튼 배경"
+                className="absolute left-0 top-0 w-full h-full object-cover z-0 group-hover:opacity-90 transition-opacity"
+                draggable={false}
+              />
+              <span className="relative z-10 font-pretendard font-light text-lg text-white select-none">
+                {region}
+              </span>
+            </button>
+          ))}
         </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 대통대잎술 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">대통대잎술</b>
-          <div className="absolute top-[25.7%] left-[80.96%] text-base text-lightyellow text-right z-20">
-            약주
-          </div>
-        </div>
-        {/* 매실 막걸리 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">
-            매실 막걸리
-          </b>
-          <div className="absolute top-[25.7%] left-[68.07%] text-base text-lightyellow text-right z-20">
-            살균탁주
-          </div>
-        </div>
-        {/* 백운 복분자주 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">
-            백운 복분자주
-          </b>
-          <div className="absolute top-[25.7%] left-[68.07%] text-base text-lightyellow text-right z-20">
-            기타주류
-          </div>
-        </div>
-        {/* 명품 진도홍주 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[8.61%] z-20">
-            명품 진도홍주
-          </b>
-          <div className="absolute top-[26.22%] left-[64.45%] text-base text-lightyellow text-right z-20">
-            일반증류주
-          </div>
-        </div>
-        {/* 백운 복분자 와인 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[8.61%] z-20">
-            백운 복분자 와인
-          </b>
-          <div className="absolute top-[25.7%] left-[69.52%] text-base text-lightyellow text-right z-20">
-            기타주류
-          </div>
-        </div>
-        {/* 병영소주 */}
-        <div className="w-full max-w-[400px] relative h-10 text-left text-lg text-white font-inter">
-          <Image
-            className="absolute left-0 top-0 w-full h-full z-0"
-            src="/search-bg.svg"
-            alt="박스 배경"
-            fill
-            style={{ objectFit: "cover" }}
-          />
-          <b className="absolute top-[19.65%] left-[10.07%] z-20">병영소주</b>
-          <div className="absolute top-[25.7%] left-[61.78%] text-base text-lightyellow text-right z-20">
-            증류식 소주
-          </div>
+        {/* 랭킹 기본 영역 및 안내 문구 */}
+        <div className="w-full max-w-[600px] min-h-[320px] min-w-[320px] mx-auto mt-8 bg-white/80 rounded-lg shadow p-8 flex flex-col items-center justify-center">
+          {!selectedRegion ? (
+            <div className="text-gray-400 text-xl font-pretendard">
+              지역을 클릭하여 확인해주세요
+            </div>
+          ) : (
+            <>
+              <div className="font-bold text-2xl mb-4 text-main">
+                {selectedRegion} TOP 10
+              </div>
+              {loading ? (
+                <div className="text-center text-gray-400">불러오는 중...</div>
+              ) : error ? (
+                <div className="text-center text-red-400">{error}</div>
+              ) : ranking.length === 0 ? (
+                <div className="text-center text-gray-400">
+                  랭킹 데이터가 없습니다.
+                </div>
+              ) : (
+                <ol className="list-decimal pl-6 w-full">
+                  {ranking.map((item, idx) => (
+                    <li
+                      key={item.name}
+                      className="mb-2 flex justify-between items-center"
+                    >
+                      <span className="font-semibold text-lg">{item.name}</span>
+                      <span className="text-main font-bold">
+                        {item.totalQuantity}개
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </>
+          )}
         </div>
       </section>
     </div>

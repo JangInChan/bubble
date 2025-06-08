@@ -9,7 +9,7 @@ import apiClient from "./api-client";
  * console.log(data.region); // 지역명
  * console.log(data.ranking); // [{ name, totalQuantity }, ...]
  */
-export async function getRankings(regionCode: number) {
+export async function getRankings(regionCode: string) {
   const response = await apiClient.get("/rankings", {
     params: { regionCode },
   });

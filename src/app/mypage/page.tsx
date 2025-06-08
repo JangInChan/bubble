@@ -130,12 +130,33 @@ export default function MyPage() {
               <ul className="mb-2">
                 {order.items &&
                   order.items.map((item: any, idx: number) => (
-                    <li key={idx} className="flex justify-between text-[15px]">
+                    <li
+                      key={idx}
+                      className="flex justify-between text-[15px] items-center"
+                    >
                       <span>
                         {item.drinkName}{" "}
                         <span className="text-[#888]">x{item.quantity}</span>
                       </span>
                       <span>{item.totalPrice?.toLocaleString()}원</span>
+                      {/* 리뷰쓰기 버튼 */}
+                      <span className="ml-4">
+                        {/* 리뷰 여부는 임시로 false, 실제로는 리뷰 데이터와 비교 필요 */}
+                        {false ? (
+                          <span className="text-gray-400 text-sm">
+                            리뷰완료
+                          </span>
+                        ) : (
+                          <button
+                            className="text-main underline text-sm hover:text-orange-600"
+                            onClick={() => {
+                              window.location.href = `/mypage/review/write?orderId=${order.orderId}&drinkId=${item.drinkId}`;
+                            }}
+                          >
+                            리뷰쓰기
+                          </button>
+                        )}
+                      </span>
                     </li>
                   ))}
               </ul>

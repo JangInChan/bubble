@@ -429,8 +429,30 @@ export default function DrinkPage() {
             내외로 차이날 경우 예약배송 상품 출고일에 합배송 되는 점 양해
             부탁드립니다.
           </p>
-          <div className="w-full min-h-[800px] bg-gray-100 p-8 flex flex-col items-center justify-center">
-            {drink.drinkImageUrlList && drink.drinkImageUrlList.length > 0 ? (
+          <div className="w-full min-h-[1000px] bg-gray-100 p-8 flex flex-col items-center justify-center">
+            {drink.id === 6 ? (
+              <>
+                {/* 쇼츠 영상 */}
+                <div className="w-full max-w-[700px] mb-8">
+                  <video
+                    controls
+                    className="w-full rounded-lg shadow-lg"
+                    poster={drink.thumbnailUrl}
+                  >
+                    <source src="/gijuddpo.mp4" type="video/mp4" />
+                    브라우저가 비디오를 지원하지 않습니다.
+                  </video>
+                </div>
+                {/* 상세 이미지 */}
+                <img
+                  src="/ddpo.jpeg"
+                  alt="상세 이미지"
+                  className="mb-6 max-w-full h-auto mx-auto rounded-lg shadow-lg"
+                  style={{ maxWidth: 900 }}
+                />
+              </>
+            ) : drink.drinkImageUrlList &&
+              drink.drinkImageUrlList.length > 0 ? (
               drink.drinkImageUrlList.map((url, idx) => (
                 <img
                   key={idx}
