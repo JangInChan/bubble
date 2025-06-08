@@ -25,6 +25,7 @@ export default function TossPaymentWidget({
 }: TossPaymentWidgetProps) {
   const paymentWidgetRef = useRef<any>(null);
   const [widgetLoaded, setWidgetLoaded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -39,6 +40,7 @@ export default function TossPaymentWidget({
 
   const handlePayment = async () => {
     if (!paymentWidgetRef.current) return;
+    setErrorMessage("");
     try {
       await paymentWidgetRef.current.requestPayment({
         orderId: orderInfo.orderId,
@@ -48,8 +50,19 @@ export default function TossPaymentWidget({
         successUrl: orderInfo.successUrl,
         failUrl: orderInfo.failUrl,
       });
-    } catch (e) {
-      alert("결제 요청 중 오류가 발생했습니다.");
+    } catch (e: any) {
+      // Toss 위젯 Bridge 에러 및 결제수단 미선택 안내
+      if (e?.message?.includes("카드 결제 정보를 선택해주세요")) {
+        setErrorMessage("결제수단을 선택한 후 결제하기를 눌러주세요.");
+      } else if (e?.message?.includes("Bridge 연결이 끊겼습니다")) {
+        setErrorMessage(
+          "결제창이 비정상적으로 종료되었습니다. 새로고침 후 다시 시도해 주세요."
+        );
+      } else {
+        setErrorMessage(
+          "결제 요청 중 오류가 발생했습니다. 다시 시도해 주세요."
+        );
+      }
       console.error(e);
     }
   };
@@ -58,6 +71,11 @@ export default function TossPaymentWidget({
     <div>
       <div id="payment-method" />
       <div id="agreement" />
+      {errorMessage && (
+        <div className="text-red-500 text-center my-2 text-sm">
+          {errorMessage}
+        </div>
+      )}
       <button
         onClick={handlePayment}
         disabled={!widgetLoaded}
