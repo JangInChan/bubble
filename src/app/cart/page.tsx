@@ -666,7 +666,7 @@ export default function CartPage() {
                   <th className="border-r border-sub-light py-3">선택</th>
                   <th className="border-r border-sub-light">상품정보</th>
                   <th className="border-r border-sub-light">주문금액</th>
-                  <th className="border-r border-sub-light">배송비</th>
+                  {/* <th className="border-r border-sub-light">배송비</th> */}
                   <th>관리</th>
                 </tr>
               </thead>
@@ -728,11 +728,11 @@ export default function CartPage() {
                         </button>
                       </div>
                     </td>
-                    <td className="border-r border-sub-light align-middle font-medium">
+                    {/* <td className="border-r border-sub-light align-middle font-medium">
                       {buyInfo && buyInfo.deliveryCharge === 0
                         ? "무료"
                         : `${shippingFee.toLocaleString()}원`}
-                    </td>
+                    </td> */}
                     <td className="align-middle text-center">
                       <button
                         className="text-red-500 hover:text-red-700 text-sm flex items-center mx-auto cursor-pointer"
