@@ -40,21 +40,23 @@ export const getMyReviews = () => {
 /**
  * POST /api/reviews/orders/{orderId}
  * 리뷰 작성
- * 리뷰 작성입니다. 검증내용 : 유저ID검증, 술ID검증, 리뷰검증, 유저의 주문 목록 검증, 주문에서 해당 술 샀는지 검증
  * @param orderId - 주문 ID
- * @param drinkId - 술 ID
+ * @param drinkName - 술 이름
  * @param content - 리뷰 내용
  * @param score - 별점
  * @returns 리뷰 작성 결과
  */
 export const createReview = (
   orderId: number,
-  drinkId: number,
+  drinkName: string,
   content: string,
   score: number
 ) => {
-  return apiClient.post(`/reviews/orders/${orderId}?drinkId=${drinkId}`, {
-    content,
-    score,
-  });
+  return apiClient.post(
+    `/reviews/orders/${orderId}?drinkName=${encodeURIComponent(drinkName)}`,
+    {
+      content,
+      score,
+    }
+  );
 };
