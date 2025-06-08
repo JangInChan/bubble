@@ -41,20 +41,20 @@ export async function paymentFail(
 }
 
 /**
- * 결제 취소 API 호출
+ * 결제 취소 API 호출 (최신 명세)
  * @param orderId - 취소할 주문 ID
- * @param canceledItems - 취소할 주문 상세 항목 배열 (orderDetailId, cancelAmount)
+ * @param canceledItems - 취소할 주문 상세 항목 배열 (orderDetailId만)
  * @param cancelReason - 취소 사유
  * @returns {Promise<any>} 취소 결과 (success, message, data 등)
  * @example
- * const result = await cancelPayment(1, [{ orderDetailId: 1, cancelAmount: 1000 }], "고객 요청");
+ * const result = await cancelPayment(1, [{ orderDetailId: 1 }], "고객 요청");
  */
 export async function cancelPayment(
   orderId: number,
-  canceledItems: Array<{ orderDetailId: number; cancelAmount: number }>,
+  canceledItems: Array<{ orderDetailId: number }>,
   cancelReason: string
 ) {
-  const response = await apiClient.post(`/payment/${orderId}/cancel`, {
+  const response = await apiClient.post(`/payment/cancel`, {
     orderId,
     canceledItems,
     cancelReason,

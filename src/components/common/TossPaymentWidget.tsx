@@ -8,6 +8,8 @@ interface TossPaymentWidgetProps {
     orderName: string;
     customerName: string;
     customerEmail: string;
+    successUrl: string;
+    failUrl: string;
   };
 }
 
@@ -43,8 +45,8 @@ export default function TossPaymentWidget({
         orderName: orderInfo.orderName,
         customerName: orderInfo.customerName,
         customerEmail: orderInfo.customerEmail,
-        successUrl: "https://giju.vercel.app/payment/success",
-        failUrl: "https://giju.vercel.app/payment/fail",
+        successUrl: orderInfo.successUrl,
+        failUrl: orderInfo.failUrl,
       });
     } catch (e) {
       alert("결제 요청 중 오류가 발생했습니다.");

@@ -97,6 +97,7 @@ export default function CartPage() {
   // 주문 생성 및 결제에 필요한 정보 준비
   const [orderInfo, setOrderInfo] = useState<any>(null);
   const [amountForWidget, setAmountForWidget] = useState<number>(0);
+  const [showTossWidget, setShowTossWidget] = useState(false);
 
   useEffect(() => {
     async function fetchCart() {
@@ -619,8 +620,11 @@ export default function CartPage() {
         orderName: orderResult.orderName,
         customerName: orderResult.customerName,
         customerEmail: orderResult.customerEmail,
+        successUrl: orderResult.successUrl,
+        failUrl: orderResult.failUrl,
       });
       setAmountForWidget(orderResult.amount);
+      setShowTossWidget(true);
     } catch (e) {
       alert("주문 생성 중 오류가 발생했습니다.");
     }
@@ -815,6 +819,15 @@ export default function CartPage() {
                 구매하기
               </button>
             </div>
+            {/* Toss 결제 위젯 */}
+            {showTossWidget && orderInfo && amountForWidget > 0 && (
+              <div className="flex justify-center mt-8">
+                <TossPaymentWidget
+                  orderInfo={orderInfo}
+                  amount={amountForWidget}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

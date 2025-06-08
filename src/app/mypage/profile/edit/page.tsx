@@ -7,12 +7,12 @@ import { updateUser } from "@/lib/user";
 export default function ProfileEditPage() {
   const { user, isLoggedIn, isLoading, login: refreshAuth } = useAuth();
   const router = useRouter();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phoneNumber: "",
-    birthday: ""
+    birthday: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +24,7 @@ export default function ProfileEditPage() {
         name: userData.name || "",
         email: userData.email || "",
         phoneNumber: userData.phoneNumber || "",
-        birthday: userData.birthday || ""
+        birthday: userData.birthday || "",
       });
     }
   }, [user]);
@@ -37,15 +37,15 @@ export default function ProfileEditPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // 입력 시 해당 필드 에러 제거
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
@@ -93,20 +93,20 @@ export default function ProfileEditPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
       const userData = (user as any)?.data;
-      
+
       await updateUser({
         userId: userData.loginId,
         name: formData.name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
-        birthday: formData.birthday.replace(/-/g, "") // YYYY-MM-DD를 YYYYMMDD로 변환
+        birthday: formData.birthday.replace(/-/g, ""), // YYYY-MM-DD를 YYYYMMDD로 변환
       });
 
       // 사용자 정보 갱신 시도
@@ -148,8 +148,11 @@ export default function ProfileEditPage() {
 
         <div className="w-full max-w-[1000px] mx-auto">
           <div className="border-b-4 border-main mb-6"></div>
-          
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow overflow-hidden">
+
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-lg shadow overflow-hidden"
+          >
             <table className="w-full">
               <tbody>
                 <tr className="border-b border-[#E5EAF2]">
@@ -188,7 +191,9 @@ export default function ProfileEditPage() {
                       placeholder="이메일을 입력하세요"
                     />
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -203,12 +208,16 @@ export default function ProfileEditPage() {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       className={`w-full px-3 py-2 border rounded focus:outline-none focus:border-main ${
-                        errors.phoneNumber ? "border-red-300" : "border-[#E5EAF2]"
+                        errors.phoneNumber
+                          ? "border-red-300"
+                          : "border-[#E5EAF2]"
                       }`}
                       placeholder="전화번호를 입력하세요"
                     />
                     {errors.phoneNumber && (
-                      <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.phoneNumber}
+                      </p>
                     )}
                   </td>
                 </tr>
@@ -228,13 +237,15 @@ export default function ProfileEditPage() {
                       max={new Date().toISOString().split("T")[0]}
                     />
                     {errors.birthday && (
-                      <p className="mt-1 text-sm text-red-600">{errors.birthday}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.birthday}
+                      </p>
                     )}
                   </td>
                 </tr>
               </tbody>
             </table>
-            
+
             <div className="flex justify-center gap-4 py-6">
               <button
                 type="button"
@@ -247,8 +258,8 @@ export default function ProfileEditPage() {
                 type="submit"
                 disabled={isSubmitting}
                 className={`px-8 py-3 text-white rounded transition-colors ${
-                  isSubmitting 
-                    ? "bg-gray-400 cursor-not-allowed" 
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
                     : "bg-main hover:bg-opacity-90"
                 }`}
               >
