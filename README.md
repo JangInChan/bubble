@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Bubble Logo](public/logo.png)
+![Bubble Logo](public/android-chrome-512x512.png)
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
