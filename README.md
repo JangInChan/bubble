@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍶 Bubble - 전통주 큐레이션 & 판매 플랫폼
 
-## Getting Started
+> **Bubble**은 한국의 전통주를 쉽고 즐겁게 경험할 수 있도록 돕는 **온라인 전통주 큐레이션 및 판매 플랫폼**입니다.  
+> 사용자 맞춤 추천, 상세한 주류 정보, 간편한 결제 시스템을 통해 전통주의 아름다움을 더욱 많은 사람들에게 전달합니다.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📌 주요 기능
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🧑‍🎨 **지도를 사용한 카테고리 선택**: 지도를 클릭하여 지역에 맞는 술 찾기
+- 📦 **주류 상세 페이지**: 주종, 도수, 어울리는 안주, 생산지 등 상세 정보 제공
+- 🛒 **장바구니 및 결제**: 간편하게 전통주를 담고 결제까지
+- 🔍 **검색 및 필터링**: 도수, 맛, 지역 등 기준으로 원하는 술 찾기
+- 🧾 **주문 내역 및 배송 조회**: 주문 추적 기능 제공
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ 기술 스택
 
-## Learn More
+| 영역       | 기술                                 |
+| ---------- | ------------------------------------ |
+| 프론트엔드 | Next.JS, TypeScript, TailwindCSS     |
+| 백엔드     | Spring, MySQL, JWT                   |
+| 배포       | Vercel (프론트), Render/EC2 (백엔드) |
+| 인증       | 카카오 소셜 로그인                   |
+| 결제       | Toss Payments                        |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 프로젝트 목적
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 전통주의 **다양성과 깊이**를 더 많은 사람에게 소개
+- 기존 쇼핑몰보다 더 **취향 중심적이고 감성적인 UI/UX** 제공
+- **20~30대 소비자**들이 전통주에 쉽게 접근할 수 있도록 브랜딩
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🖥️ 사이트
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[기주](https://giju.vercel.app/)
+
+---
+
+## 🚧 향후 개발 예정
+
+- 전통주에 어울리는 **푸드 페어링 콘텐츠** 제공
+- AI 기반 취향 분석 추천 엔진 고도화
+- 전통주 관련 **스토리 콘텐츠/인터뷰/영상 콘텐츠 연동**
+- 정기 구독 서비스 추가 예정
+
+---
+
+## 🙌 팀원 소개
+
+| 이름         | 역할                                                                         |
+| ------------ | ---------------------------------------------------------------------------- |
+| JangInChan   | 프론트엔드, UI/UX 기획                                                       |
+| KimChangHwan | 백엔드, 배송 및 택배 시스템, 이미지 시스템, 카테고리, 상품관련 시스템        |
+| KimSeonJun   | 백엔드, 리뷰시스템, 찜 시스템, 주소 시스템, 회원가입 및 로그인등 유저 시스템 |
+| ChoiJongBin  | 백엔드, 지역별 랭킹시스템, 주문 및 결제 시스템                               |
+
+---
+
+## 💬 문의 및 피드백
+
+서비스에 대한 피드백은 언제든지 환영입니다!  
+이슈 등록 또는 PR로 자유롭게 기여해주세요 :)
